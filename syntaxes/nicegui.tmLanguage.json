@@ -1,0 +1,22 @@
+{
+    "scopeName": "nicegui.injection",
+    "injectionSelector": "L:meta.function-call.arguments string.quoted.multi",
+    "patterns": [
+        {
+            "include": "text.html.hugo"
+        },
+        {
+			"contentName1": "meta.embedded.inline.html",
+			"begin1": "(''')",
+            "end1": "(''')",
+			"patterns1": [
+				{
+					"include": "text.html.hugo"
+				}
+			]
+        }
+    ],
+    "repository": [
+
+    ]
+}

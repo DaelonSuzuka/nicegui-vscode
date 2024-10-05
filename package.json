@@ -1,0 +1,42 @@
+{
+    "name": "nicegui",
+	"displayName": "NiceGUI",
+    "version": "0.0.1",
+	"description": "Language support for the NiceGUI framework",
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/daelonsuzuka/nicegui-vscode"
+	},
+	"bugs": {
+		"url": "https://github.com/daelonsuzuka/nicegui-vscode/issues"
+	},
+    "license": "MIT",
+	"author": "DaelonSuzuka",
+	"publisher": "DaelonSuzuka",
+	"engines": {
+		"vscode": "^1.68.0"
+	},
+    "contributes": {
+        "grammars": [
+            {
+                "scopeName": "nicegui.injection",
+                "path": "./syntaxes/nicegui.tmLanguage.json",
+                "injectTo": [
+                    "source.python"
+                ],
+                "embeddedLanguages": {
+                    "meta.embedded.inline.html": "html"
+                }
+            }
+        ]
+    },
+	"devDependencies": {
+		"@types/node": "^10.12.21",
+		"@types/vscode": "^1.68.0",
+		"@types/ws": "^8.2.2",
+		"esbuild": "^0.15.2",
+		"tslint": "^5.20.1",
+		"typescript": "^3.5.1",
+		"@vscode/vsce": "^2.10.0"
+	}
+}
