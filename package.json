@@ -16,6 +16,20 @@
 	"engines": {
 		"vscode": "^1.68.0"
 	},
+	"activationEvents": [
+		"onLanguage:python"
+	],    "scripts": {
+		"compile": "tsc -p ./",
+		"lint": "eslint ./src --quiet",
+		"watch": "tsc -watch -p ./",
+		"package": "vsce package",
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"test": "vscode-test"
+	},
+	"main": "./out/extension.js",
     "contributes": {
         "grammars": [
             {
