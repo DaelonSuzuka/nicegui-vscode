@@ -1,22 +1,32 @@
 {
-    "scopeName": "nicegui.injection",
-    "injectionSelector": "L:meta.function-call.arguments string.quoted.multi",
+    "scopeName": "source.nicegui.injections",
+    "injectionSelector": "L:source.python",
     "patterns": [
         {
-            "include": "text.html.hugo"
-        },
-        {
-			"contentName1": "meta.embedded.inline.html",
-			"begin1": "(''')",
-            "end1": "(''')",
-			"patterns1": [
-				{
-					"include": "text.html.hugo"
-				}
-			]
+            "begin": "(add_slot)\\s*(\\()\\s*",
+            "beginCaptures": {
+                "1": { "name": "entity.name.function" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns": [
+                {
+                    "contentName": "meta.embedded.inline.html",
+                    "begin": "('''|\"\"\")",
+                    "beginCaptures": { "1": { "name": "string.quoted.multi.python" } },
+                    "end": "(\\1)",
+                    "endCaptures": { "1": { "name": "string.quoted.multi.python" } },
+                    "patterns": [ { "include": "text.html.basic" } ]
+                },
+                {
+                    "contentName": "string.quoted.python",
+                    "begin": "('|\")",
+                    "beginCaptures": { "1": { "name": "string.quoted.python" } },
+                    "end": "(\\1)",
+                    "endCaptures": { "1": { "name": "string.quoted.python" } }
+                }
+            ]
         }
-    ],
-    "repository": [
-
     ]
 }

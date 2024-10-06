@@ -33,11 +33,11 @@
     "contributes": {
         "grammars": [
             {
-                "scopeName": "nicegui.injection",
-                "path": "./syntaxes/nicegui.tmLanguage.json",
                 "injectTo": [
                     "source.python"
                 ],
+                "scopeName": "source.nicegui.injections",
+                "path": "./syntaxes/nicegui.tmLanguage.json",
                 "embeddedLanguages": {
                     "meta.embedded.inline.html": "html"
                 }
