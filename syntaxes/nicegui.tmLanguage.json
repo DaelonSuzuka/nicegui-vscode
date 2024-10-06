@@ -70,7 +70,7 @@
         },
         {
             "name": "meta.function-call.python",
-            "begin": "(classes)[\\n\\s]*(\\()",
+            "begin1": "(classes)[\\n\\s]*(\\()",
             "beginCaptures": {
                 "1": { "name": "variable.other.property" },
                 "2": { "name": "punctuation.definition.arguments.begin.python" }
@@ -91,7 +91,7 @@
         },
         {
             "name": "meta.function-call.python",
-            "begin": "(style)[\\n\\s]*(\\()",
+            "begin1": "(style)[\\n\\s]*(\\()",
             "beginCaptures": {
                 "1": { "name": "variable.other.property" },
                 "2": { "name": "punctuation.definition.arguments.begin.python" }
