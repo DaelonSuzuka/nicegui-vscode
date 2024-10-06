@@ -1,66 +1,39 @@
 from nicegui import ui
 
-a = f''
+# HTML strings
+ui.add_head_html("<style>.my-label {background: rgb(0, 0, 255)}</style>", shared=True)
+ui.add_body_html('<div id="element">Test</div>')
 
-
-ui.add_head_html("<style>.my-label {background: rgb(0, 0, 255)}</style>")
-ui.add_body_html(
-    """
-<div>
-    <span>
-    text or something, idk
-    </span>
-</div>
-""",
-    shared=True,
-)
-
-ui.add_css(r"""
-    .red {
-        color: red;
-    }
-""")
+# CSS/Style strings
+ui.add_css(".red { color: red; }")
 ui.add_scss("""
-    .green {
-        background-color: lightgreen;
-        .blue {
-            color: blue;
-        }
+.green {
+    background-color: lightgreen;
+    .blue {
+        color: blue;
     }
-    """,
-    indented=True,
-)
+}
+""")
 ui.add_sass("""
-    .yellow
-        background-color: yellow
-        .purple
-            color: purple
+.yellow
+    background-color: yellow
+    .purple
+        color: purple
 """)
 
-tree = ui.tree()
-
-tree.add_slot(
-    "default-header",
-    '<span :props="props">Node <strong>{{ props.node.id }}</strong></span>',
-)
-tree.add_slot(
-    "default-header",
-    '<span :props="props">Node <strong>{{ props.node.id }}</strong></span>',
-)
-tree.add_slot(
-    "default-body",
-    """
-    <span :props="props">Description: "{{ props.node.description }}"</span>
-""",
-)
-tree.add_slot(
-    "default-body",
-    """
-    <span :props="props">Description: "{{ props.node.description }}"</span>
-""",
-)
-
-with ui.row().classes("w-full").style("background-color=red;"):
-    pass
+# Slots
+with ui.table() as table:
+    with table.add_slot('top-row'):
+        with table.row():
+            with table.cell():
+                ui.label('This is the top slot.')
+    table.add_slot('body', '''
+        <q-tr :props="props">
+            <q-td key="name" :props="props">overridden</q-td>
+            <q-td key="age" :props="props">
+                <q-badge color="green">{{ props.row.age }}</q-badge>
+            </q-td>
+        </q-tr>
+    ''')
 
 ui.run()
