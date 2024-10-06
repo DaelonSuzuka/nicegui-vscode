@@ -16,12 +16,11 @@ ui.add_body_html(
 )
 
 ui.add_css(r"""
-.red {
-    color: red;
-}
+    .red {
+        color: red;
+    }
 """)
-ui.add_scss(
-    """
+ui.add_scss("""
     .green {
         background-color: lightgreen;
         .blue {
@@ -31,14 +30,12 @@ ui.add_scss(
     """,
     indented=True,
 )
-ui.add_sass(
-    """
+ui.add_sass("""
     .yellow
         background-color: yellow
         .purple
             color: purple
-"""
-)
+""")
 
 tree = ui.tree()
 
