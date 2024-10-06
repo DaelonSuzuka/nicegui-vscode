@@ -3,7 +3,8 @@
     "injectionSelector": "L:source.python",
     "patterns": [
         {
-            "begin": "(add_slot)\\s*(\\()\\s*",
+            "name": "meta.function-call.python",
+            "begin": "(add_slot)[\\n\\s]*(\\()[\\n\\s]*",
             "beginCaptures": {
                 "1": { "name": "entity.name.function" },
                 "2": { "name": "punctuation.definition.arguments.begin.python" }
@@ -12,21 +13,152 @@
             "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
             "patterns": [
                 {
-                    "contentName": "meta.embedded.inline.html",
-                    "begin": "('''|\"\"\")",
-                    "beginCaptures": { "1": { "name": "string.quoted.multi.python" } },
-                    "end": "(\\1)",
-                    "endCaptures": { "1": { "name": "string.quoted.multi.python" } },
-                    "patterns": [ { "include": "text.html.basic" } ]
+                    "match": "[\\n\\s]*('|\")([\\w-]*)(\\1)[\\n\\s]*(,)[\\n\\s]*",
+                    "captures": {
+                        "1": { "name": "string.quoted.python punctuation.definition.string.begin.python" },
+                        "2": { "name": "string.quoted.python" },
+                        "3": { "name": "string.quoted.python punctuation.definition.string.end.python" },
+                        "4": { "name": "punctuation.separator.arguments.python" } 
+                    }
                 },
+                { "include": "#html_string" }
+            ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(add_head_html|add_body_html)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "entity.name.function" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns": [ { "include": "#html_string" } ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(add_css)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "entity.name.function" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns": [ { "include": "#css_string" } ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(add_scss)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "entity.name.function" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns": [ { "include": "#scss_string" } ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(add_sass)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "entity.name.function" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns": [ { "include": "#sass_strings" } ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(classes)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "variable.other.property" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns1": [
                 {
-                    "contentName": "string.quoted.python",
+                    "name": "string.quoted.python",
+                    "contentName": "meta.embedded.inline.css",
                     "begin": "('|\")",
-                    "beginCaptures": { "1": { "name": "string.quoted.python" } },
+                    "beginCaptures": { "1": { "name": "punctuation.definition.string.begin.python" } },
                     "end": "(\\1)",
-                    "endCaptures": { "1": { "name": "string.quoted.python" } }
+                    "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+                    "patterns": [ { "include": "source.css" } ]
+                }
+            ]
+        },
+        {
+            "name": "meta.function-call.python",
+            "begin": "(style)[\\n\\s]*(\\()",
+            "beginCaptures": {
+                "1": { "name": "variable.other.property" },
+                "2": { "name": "punctuation.definition.arguments.begin.python" }
+            },
+            "end": "(\\))",
+            "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
+            "patterns1": [
+                {
+                    "name": "string.quoted.python",
+                    "contentName": "meta.embedded.inline.css",
+                    "begin": "('|\")",
+                    "beginCaptures": { "1": { "name": "punctuation.definition.string.begin.python" } },
+                    "end": "(\\1)",
+                    "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+                    "patterns": [ { "include": "source.css" } ]
                 }
             ]
         }
-    ]
+    ],
+    "repository": {
+        "html_string": {
+            "name": "string.quoted.python",
+            "contentName": "meta.embedded.inline.html",
+            "begin": "(r|f)?('|\"|'''|\"\"\")",
+            "beginCaptures": { 
+                "1": { "name": "storage.type.string.python" } ,
+                "2": { "name": "punctuation.definition.string.begin.python" } 
+                },
+            "end": "(\\2)",
+            "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+            "patterns": [ { "include": "text.html.basic" } ]
+        },
+        "css_string": {
+            "name": "string.quoted.python",
+            "contentName": "meta.embedded.inline.css",
+            "begin": "(r|f)?('|\"|'''|\"\"\")",
+            "beginCaptures": { 
+                "1": { "name": "storage.type.string.python" } ,
+                "2": { "name": "punctuation.definition.string.begin.python" } 
+                },
+            "end": "(\\2)",
+            "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+            "patterns": [ { "include": "source.css" } ]
+        },
+        "scss_string": {
+            "name": "string.quoted.python",
+            "contentName": "meta.embedded.inline.scss",
+            "begin": "(r|f)?('|\"|'''|\"\"\")",
+            "beginCaptures": { 
+                "1": { "name": "storage.type.string.python" } ,
+                "2": { "name": "punctuation.definition.string.begin.python" } 
+                },
+            "end": "(\\2)",
+            "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+            "patterns": [ { "include": "source.css.scss" } ]
+        },
+        "sass_strings": {
+            "name": "string.quoted.python",
+            "contentName": "meta.embedded.inline.sass",
+            "begin": "(r|f)?('|\"|'''|\"\"\")",
+            "beginCaptures": { 
+                "1": { "name": "storage.type.string.python" } ,
+                "2": { "name": "punctuation.definition.string.begin.python" } 
+                },
+            "end": "(\\2)",
+            "endCaptures": { "1": { "name": "punctuation.definition.string.end.python" } },
+            "patterns": [ { "include": "source.sass" } ]
+        }
+    }
 }

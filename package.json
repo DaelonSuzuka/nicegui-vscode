@@ -39,7 +39,10 @@
                 "scopeName": "source.nicegui.injections",
                 "path": "./syntaxes/nicegui.tmLanguage.json",
                 "embeddedLanguages": {
-                    "meta.embedded.inline.html": "html"
+                    "meta.embedded.inline.html": "html",
+                    "meta.embedded.inline.css": "css",
+                    "meta.embedded.inline.scss": "scss",
+                    "meta.embedded.inline.sass": "sass"
                 }
             }
         ]
