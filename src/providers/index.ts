@@ -1,1 +1,1 @@
-export * from "./tailwind_completions"
+export * from "./completions"

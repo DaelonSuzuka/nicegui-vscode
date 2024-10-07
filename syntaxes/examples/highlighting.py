@@ -35,5 +35,3 @@ with ui.table() as table:
             </q-td>
         </q-tr>
     ''')
-
-ui.run()

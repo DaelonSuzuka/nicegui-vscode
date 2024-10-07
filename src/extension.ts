@@ -1,12 +1,12 @@
 import type * as vscode from "vscode";
 import {
-	TailwindCompletionItemProvider
+	NiceGuiCompletionItemProvider
 } from "./providers";
 
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('wtf');
-    new TailwindCompletionItemProvider(context);
+    new NiceGuiCompletionItemProvider(context);
 }
 
 export function deactivate() {

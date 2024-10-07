@@ -1,25 +1,27 @@
 {
-	"compilerOptions": {
-		"module": "NodeNext",
-		"target": "es2022",
-		"moduleResolution": "NodeNext",
-		"moduleDetection": "force",
-		"isolatedModules": true,
-		"outDir": "out",
-		"lib": [
-			"es2022",
-			"dom"
-		],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": false,
-		"skipLibCheck": true,
-		"allowJs": true
-	},
-	"exclude": [
-		"node_modules",
-		"out",
-		"tools",
-		"media"
-	]
+    "compilerOptions": {
+        "module": "NodeNext",
+        "target": "es2022",
+        "moduleResolution": "NodeNext",
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "outDir": "out",
+        "lib": [
+            "es2022",
+            "dom"
+        ],
+        "sourceMap": true,
+        "rootDir": "src",
+        "strict": false,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true
+    },
+    "exclude": [
+        "node_modules",
+        "out",
+        "tools",
+        "media"
+    ]
 }
