@@ -1,4 +1,6 @@
 from nicegui import ui
 
 
-button = ui.button().classes("text-red").props("").style("")
+with ui.row().classes(''):
+    ui.button('1')
+    ui.button('2')
