@@ -7,14 +7,21 @@ quasar_path = root.parent / "quasar"
 components_path = quasar_path / "ui" / "src" / "components"
 asset_dir = root / "assets"
 
+
+def write_json(filename: str, obj):
+    if not filename.endswith(".json"):
+        filename += ".json"
+    with open(asset_dir / filename, "w") as f:
+        json.dump(obj, f, indent=4)
+
+
 components: dict[str, dict[str, any]] = {}
 for file in components_path.rglob("*.json"):
     with open(file) as f:
         component = json.load(f)
         components[file.name.removesuffix(".json")] = component
 
-with open(asset_dir / "quasar_components.json", "w") as f:
-    json.dump(components, f, indent=4)
+write_json("quasar_components", components)
 
 
 props = set()
@@ -36,11 +43,7 @@ for component in components.values():
         for item in items:
             slots.add(item)
 
-with open(asset_dir / "quasar_props.json", "w") as f:
-    json.dump(list(props), f, indent=4)
-with open(asset_dir / "quasar_events.json", "w") as f:
-    json.dump(list(events), f, indent=4)
-with open(asset_dir / "quasar_methods.json", "w") as f:
-    json.dump(list(methods), f, indent=4)
-with open(asset_dir / "quasar_slots.json", "w") as f:
-    json.dump(list(slots), f, indent=4)
+write_json("quasar_props", sorted(list(props)))
+write_json("quasar_events", sorted(list(events)))
+write_json("quasar_methods", sorted(list(methods)))
+write_json("quasar_slots", sorted(list(slots)))
