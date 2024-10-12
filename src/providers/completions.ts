@@ -9,6 +9,12 @@ import type {
 } from "vscode";
 import { CompletionItem } from "vscode";
 import tailwindClasses from "../../assets/tailwind_classes.json";
+import quasarInfo from "../../assets/quasar_components.json";
+import quasarProps from "../../assets/quasar_props.json";
+import quasarEvents from "../../assets/quasar_events.json";
+import quasarMethods from "../../assets/quasar_methods.json";
+import quasarSlots from "../../assets/quasar_slots.json";
+
 import { createLogger } from "../utils";
 
 const log = createLogger("providers.tw");
