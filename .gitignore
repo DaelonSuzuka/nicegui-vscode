@@ -7,6 +7,5 @@ test
 configurations/tmp.txt
 configurations/test.py
 .vscode-test
-workspace.code-workspace
 
 .venv
