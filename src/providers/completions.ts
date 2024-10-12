@@ -72,7 +72,27 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			return undefined;
 		}
 
-		let className = null;
+		// get the range of the word from under the cursor
+		const wordRange = document.getWordRangeAtPosition(
+			position,
+			/\b[\w-]+\b|([\"'])\1/,
+		);
+
+		// convert the range into the actual word
+		let word = "";
+		if (wordRange !== undefined) {
+			word = document.getText(wordRange);
+			if (['""', "''"].includes(word)) {
+				word = "";
+			}
+		}
+
+		// ironically, "classes" doesn't rely on knowing the class
+		if (result[1] === "classes") {
+			return build_completions(tailwindClasses, word, wordRange);
+		}
+
+		let className: string = null;
 
 		if (this.pylance?.isActive) {
 			const client = await this.pylance.exports.client.getClient();
@@ -99,39 +119,40 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			);
 
 			if (possibleClass) {
-				className = possibleClass[1];
+				className = `Q${possibleClass[1]}`;
+				// Convert NiceGUI types to Quasar types
+				className = className.replace("Button", "Btn");
+				className = className.replace("Image", "Img");
 			}
 		}
 
-		// log.debug("className", className);
+		log.debug("className", className);
+
+		const classData = quasarInfo[className];
 
 		const items = [];
-
-		// get the range of the word from under the cursor
-		const wordRange = document.getWordRangeAtPosition(
-			position,
-			/\b[\w-]+\b|([\"'])\1/,
-		);
-
-		// convert the range into the actual word
-		let word = "";
-		if (wordRange !== undefined) {
-			word = document.getText(wordRange);
-			if (['""', "''"].includes(word)) {
-				word = "";
-			}
-		}
 
 		// log.debug("word", word);
 
 		switch (result[1]) {
-			case "classes":
-				// log.debug("classes");
-				items.push(...build_completions(tailwindClasses, word, wordRange));
-				break;
 			case "props":
-				// log.debug("props");
-				items.push(...build_completions(quasarProps, word, wordRange));
+				if (classData?.props) {
+					const props = classData.props;
+					for (const possible in props) {
+						if (word === "" || possible.includes(word)) {
+							const item = new CompletionItem(possible);
+							const prop = props[possible];
+							item.detail = prop.type;
+							item.documentation = prop.desc;
+							if (word !== "") {
+								item.range = wordRange;
+							}
+							items.push(item);
+						}
+					}
+				} else {
+					items.push(...build_completions(quasarProps, word, wordRange));
+				}
 				break;
 			case "add_slot":
 				// log.debug("slots");
