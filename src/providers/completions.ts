@@ -50,27 +50,45 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		}
 		const items = [];
 
-		// get the full word from under the cursor
-		const wordRange = document.getWordRangeAtPosition(position, /\b[\w-]+\b|([\"'])\1/);
-		const word = document.getText(wordRange);
+		// get the range of the word from under the cursor
+		const wordRange = document.getWordRangeAtPosition(
+			position,
+			/\b[\w-]+\b|([\"'])\1/,
+		);
+
+		// convert the range into the actual word
+		let word = "";
+		if (wordRange !== undefined) {
+			word = document.getText(wordRange);
+			if (['""', "''"].includes(word)) {
+				word = "";
+			}
+		}
 
 		log.debug("word", word);
 
-        if (result[1] === "props") {
-            log.debug("props");
-        }
-		if (result[1] === "classes") {
-            log.debug("classes");
-			for (const tw of tailwindClasses) {
-				if (tw.startsWith(word)) {
-					const item = new CompletionItem(tw);
-					item.range = wordRange;
-					items.push(item);
+		switch (result[1]) {
+			case "props":
+				log.debug("props");
+				break;
+			case "classes":
+				log.debug("classes");
+				for (const tw of tailwindClasses) {
+					if (word === "") {
+						items.push(new CompletionItem(tw));
+					} else if (tw.startsWith(word)) {
+						const item = new CompletionItem(tw);
+						item.range = wordRange;
+						items.push(item);
+					}
 				}
-			}
-		}
-		if (result[1] === "style") {
-            log.debug("style");
+				break;
+			case "style":
+				log.debug("style");
+				break;
+
+			default:
+				break;
 		}
 
 		log.debug("found ", items);
