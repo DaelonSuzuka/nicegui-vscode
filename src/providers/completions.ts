@@ -36,8 +36,13 @@ function build_completions(list, word: string, wordRange: Range) {
 }
 
 export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
+	// biome-ignore lint/suspicious/noExplicitAny: <vscode API?>
+	pylance: vscode.Extension<any>;
+
 	constructor(private context: ExtensionContext) {
 		const selector = [{ language: "python", scheme: "file" }];
+
+		this.pylance = vscode.extensions.getExtension("ms-python.vscode-pylance");
 
 		this.context.subscriptions.push(
 			vscode.languages.registerCompletionItemProvider(selector, this),
@@ -50,24 +55,56 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		token: CancellationToken,
 		context: CompletionContext,
 	): Promise<CompletionItem[] | CompletionList<CompletionItem>> {
-		log.debug("provideCompletionItems");
+		// log.debug("provideCompletionItems");
 
 		// get the entire line up until the cursor
 		const linePrefix = document
 			.lineAt(position)
 			.text.slice(0, position.character);
-		log.debug("linePrefix", linePrefix);
+		// log.debug("linePrefix", linePrefix);
 
 		// look backwards for ".classes("
 		const result = linePrefix.match(
 			/.(props|classes|style|on|run_method|add_slot)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/,
 		);
 
-		log.debug("result", result);
-
 		if (!result) {
 			return undefined;
 		}
+
+		let className = null;
+
+		if (this.pylance?.isActive) {
+			const client = await this.pylance.exports.client.getClient();
+
+			const offset = document.offsetAt(position);
+			const hoverPosition = document.positionAt(
+				offset - (result[0].length - 1),
+			);
+
+			const response = await client._connection.sendRequest(
+				"textDocument/hover",
+				{
+					textDocument: { uri: document.uri.toString() },
+					position: {
+						line: hoverPosition.line,
+						character: hoverPosition.character,
+					},
+				},
+			);
+			const body = response.contents.value;
+
+			const possibleClass = body.match(
+				/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
+			);
+
+			if (possibleClass) {
+				className = possibleClass[1];
+			}
+		}
+
+		// log.debug("className", className);
+
 		const items = [];
 
 		// get the range of the word from under the cursor
@@ -85,38 +122,38 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			}
 		}
 
-		log.debug("word", word);
+		// log.debug("word", word);
 
 		switch (result[1]) {
 			case "classes":
-				log.debug("classes");
+				// log.debug("classes");
 				items.push(...build_completions(tailwindClasses, word, wordRange));
 				break;
 			case "props":
-				log.debug("props");
+				// log.debug("props");
 				items.push(...build_completions(quasarProps, word, wordRange));
 				break;
 			case "add_slot":
-				log.debug("slots");
+				// log.debug("slots");
 				items.push(...build_completions(quasarSlots, word, wordRange));
 				break;
 			case "on":
-				log.debug("events");
+				// log.debug("events");
 				items.push(...build_completions(quasarEvents, word, wordRange));
 				break;
 			case "run_method":
-				log.debug("methods");
+				// log.debug("methods");
 				items.push(...build_completions(quasarMethods, word, wordRange));
 				break;
 			case "style":
-				log.debug("style");
+				// log.debug("style");
 				break;
 
 			default:
 				break;
 		}
 
-		log.debug("found ", items);
+		// log.debug("found ", items);
 		return items;
 	}
 }

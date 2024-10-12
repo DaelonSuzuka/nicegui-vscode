@@ -8,8 +8,10 @@ with ui.row().classes(''):
 ui.button().on('')
 
 ui.card().props('')
+ui.card().style('')
 
 ui.table().run_method('')
+ui.table().on('')
 
 
 button = ui.button()
@@ -23,3 +25,4 @@ class MyCard(ui.card):
 
 card = MyCard()
 card.props('')  # <-- or this
+card.on('')
