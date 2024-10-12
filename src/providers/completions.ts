@@ -46,7 +46,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		// look backwards for ".classes("
 		const result = linePrefix.match(
-			/.(props|classes|style)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/,
+			/.(props|classes|style|on|run_method)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/,
 		);
 
 		log.debug("result", result);
@@ -74,9 +74,6 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		log.debug("word", word);
 
 		switch (result[1]) {
-			case "props":
-				log.debug("props");
-				break;
 			case "classes":
 				log.debug("classes");
 				for (const tw of tailwindClasses) {
@@ -84,6 +81,42 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 						items.push(new CompletionItem(tw));
 					} else if (tw.startsWith(word)) {
 						const item = new CompletionItem(tw);
+						item.range = wordRange;
+						items.push(item);
+					}
+				}
+				break;
+			case "props":
+				log.debug("props");
+				for (const prop of quasarProps) {
+					if (word === "") {
+						items.push(new CompletionItem(prop));
+					} else if (prop.startsWith(word)) {
+						const item = new CompletionItem(prop);
+						item.range = wordRange;
+						items.push(item);
+					}
+				}
+				break;
+			case "on":
+				log.debug("events");
+				for (const event of quasarEvents) {
+					if (word === "") {
+						items.push(new CompletionItem(event));
+					} else if (event.startsWith(word)) {
+						const item = new CompletionItem(event);
+						item.range = wordRange;
+						items.push(item);
+					}
+				}
+				break;
+			case "run_method":
+				log.debug("methods");
+				for (const method of quasarMethods) {
+					if (word === "") {
+						items.push(new CompletionItem(method));
+					} else if (method.startsWith(word)) {
+						const item = new CompletionItem(method);
 						item.range = wordRange;
 						items.push(item);
 					}
