@@ -1,6 +1,5 @@
 {
-    "files":
-    {
-    "maxSize": 500000
+    "files": {
+        "maxSize": 5000000
     }
 }
