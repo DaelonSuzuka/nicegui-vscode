@@ -64,7 +64,7 @@ for component in components.values():
 # fix component names
 out = {}
 for name, component in components.items():
-    out[name.split("/")[-1]] = component
+    out[name.split("/")[-1].lower()] = component
 
 
 write_json("quasar_components", out)

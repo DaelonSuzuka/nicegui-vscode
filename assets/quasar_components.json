@@ -1,5 +1,5 @@
 {
-    "Brand": {
+    "brand": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/style/color-palette"
         },
@@ -317,7 +317,7 @@
             }
         }
     },
-    "AppVisibility": {
+    "appvisibility": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/app-visibility"
         },
@@ -331,7 +331,7 @@
             }
         }
     },
-    "LoadingBar": {
+    "loadingbar": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/loading-bar"
         },
@@ -396,7 +396,7 @@
             }
         }
     },
-    "Screen": {
+    "screen": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/options/screen-plugin"
         },
@@ -587,7 +587,7 @@
             }
         }
     },
-    "IconSet": {
+    "iconset": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/options/quasar-icon-sets"
         },
@@ -2422,7 +2422,7 @@
             }
         }
     },
-    "Dialog": {
+    "dialog": {
         "mixins": [
             "utils/private.dialog/create-dialog"
         ],
@@ -2731,7 +2731,7 @@
         "events": {},
         "slots": {}
     },
-    "AppFullscreen": {
+    "appfullscreen": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/app-fullscreen"
         },
@@ -2811,7 +2811,7 @@
             }
         }
     },
-    "BottomSheet": {
+    "bottomsheet": {
         "mixins": [
             "utils/private.dialog/create-dialog"
         ],
@@ -2932,7 +2932,7 @@
         "events": {},
         "slots": {}
     },
-    "AddressbarColor": {
+    "addressbarcolor": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/addressbar-color"
         },
@@ -2954,7 +2954,7 @@
             }
         }
     },
-    "Notify": {
+    "notify": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/notify"
         },
@@ -3527,7 +3527,7 @@
             }
         }
     },
-    "Lang": {
+    "lang": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/options/quasar-language-packs"
         },
@@ -4969,7 +4969,7 @@
             }
         }
     },
-    "Cookies": {
+    "cookies": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/cookies"
         },
@@ -5161,7 +5161,7 @@
             }
         }
     },
-    "Loading": {
+    "loading": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/loading"
         },
@@ -5415,7 +5415,7 @@
             }
         }
     },
-    "Dark": {
+    "dark": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/dark"
         },
@@ -5480,7 +5480,7 @@
             }
         }
     },
-    "SessionStorage": {
+    "sessionstorage": {
         "mixins": [
             "plugins/storage/engine/web-storage"
         ],
@@ -5693,7 +5693,7 @@
         },
         "slots": {}
     },
-    "LocalStorage": {
+    "localstorage": {
         "mixins": [
             "plugins/storage/engine/web-storage"
         ],
@@ -5906,12 +5906,12 @@
         },
         "slots": {}
     },
-    "Meta": {
+    "meta": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/quasar-plugins/meta"
         }
     },
-    "Platform": {
+    "platform": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/options/platform-detection"
         },
@@ -7525,7 +7525,7 @@
             }
         }
     },
-    "Morph": {
+    "morph": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/morph"
         },
@@ -7706,7 +7706,7 @@
             }
         }
     },
-    "Scroll": {
+    "scroll": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/scroll"
         },
@@ -7732,7 +7732,7 @@
             ]
         }
     },
-    "TouchHold": {
+    "touchhold": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/touch-hold"
         },
@@ -7810,7 +7810,7 @@
             }
         }
     },
-    "Intersection": {
+    "intersection": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/intersection"
         },
@@ -8025,7 +8025,7 @@
             }
         }
     },
-    "Mutation": {
+    "mutation": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/mutation"
         },
@@ -8146,7 +8146,7 @@
             }
         }
     },
-    "ClosePopup": {
+    "closepopup": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/close-popup"
         },
@@ -8166,7 +8166,7 @@
             ]
         }
     },
-    "TouchRepeat": {
+    "touchrepeat": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/touch-repeat"
         },
@@ -8305,7 +8305,7 @@
             }
         }
     },
-    "Ripple": {
+    "ripple": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/material-ripple"
         },
@@ -8419,7 +8419,7 @@
             }
         }
     },
-    "ScrollFire": {
+    "scrollfire": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/scroll-fire"
         },
@@ -8441,7 +8441,7 @@
             ]
         }
     },
-    "TouchSwipe": {
+    "touchswipe": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/touch-swipe"
         },
@@ -8551,7 +8551,7 @@
             }
         }
     },
-    "TouchPan": {
+    "touchpan": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-directives/touch-pan"
         },
@@ -8874,7 +8874,7 @@
             }
         }
     },
-    "QSkeleton": {
+    "qskeleton": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/skeleton"
         },
@@ -8999,7 +8999,7 @@
             }
         }
     },
-    "QChatMessage": {
+    "qchatmessage": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/chat"
         },
@@ -9132,7 +9132,7 @@
             }
         }
     },
-    "QMarkupTable": {
+    "qmarkuptable": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/markup-table"
         },
@@ -9199,7 +9199,7 @@
             }
         }
     },
-    "QTooltip": {
+    "qtooltip": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle",
             "composables/private.use-anchor/use-anchor-static",
@@ -9473,7 +9473,7 @@
             }
         }
     },
-    "QBar": {
+    "qbar": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/bar"
         },
@@ -9534,7 +9534,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerInfinity": {
+    "qspinnerinfinity": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9563,7 +9563,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerFacebook": {
+    "qspinnerfacebook": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9592,7 +9592,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerRings": {
+    "qspinnerrings": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9621,7 +9621,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerOrbit": {
+    "qspinnerorbit": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9650,7 +9650,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerIos": {
+    "qspinnerios": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9679,7 +9679,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerHourglass": {
+    "qspinnerhourglass": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9708,7 +9708,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerBox": {
+    "qspinnerbox": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9737,7 +9737,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerAudio": {
+    "qspinneraudio": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9766,7 +9766,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerGrid": {
+    "qspinnergrid": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9795,7 +9795,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerHearts": {
+    "qspinnerhearts": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9824,7 +9824,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinner": {
+    "qspinner": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9862,7 +9862,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerBall": {
+    "qspinnerball": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9891,7 +9891,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerCube": {
+    "qspinnercube": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9920,7 +9920,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerDots": {
+    "qspinnerdots": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9949,7 +9949,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerClock": {
+    "qspinnerclock": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -9978,7 +9978,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerGears": {
+    "qspinnergears": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10007,7 +10007,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerBars": {
+    "qspinnerbars": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10036,7 +10036,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerComment": {
+    "qspinnercomment": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10065,7 +10065,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerTail": {
+    "qspinnertail": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10094,7 +10094,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerRadio": {
+    "qspinnerradio": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10123,7 +10123,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerOval": {
+    "qspinneroval": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10152,7 +10152,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerPuff": {
+    "qspinnerpuff": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10181,7 +10181,7 @@
         "methods": {},
         "slots": {}
     },
-    "QSpinnerPie": {
+    "qspinnerpie": {
         "mixins": [
             "components/spinner/spinner"
         ],
@@ -10210,7 +10210,7 @@
         "methods": {},
         "slots": {}
     },
-    "QCheckbox": {
+    "qcheckbox": {
         "mixins": [
             "components/checkbox/use-checkbox"
         ],
@@ -10598,7 +10598,7 @@
             }
         }
     },
-    "QMenu": {
+    "qmenu": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle",
             "composables/private.use-portal/use-portal",
@@ -10944,7 +10944,7 @@
             }
         }
     },
-    "QBanner": {
+    "qbanner": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/banner"
         },
@@ -11312,7 +11312,7 @@
             }
         }
     },
-    "QUploader": {
+    "quploader": {
         "mixins": [
             "composables/private.use-file/use-file",
             "components/uploader/xhr-uploader-plugin"
@@ -12013,12 +12013,12 @@
             }
         }
     },
-    "QUploaderAddTrigger": {
+    "quploaderaddtrigger": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/uploader"
         }
     },
-    "QChip": {
+    "qchip": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/chip"
         },
@@ -12268,7 +12268,7 @@
             }
         }
     },
-    "QList": {
+    "qlist": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/list-and-list-items"
         },
@@ -12325,7 +12325,7 @@
             }
         }
     },
-    "QItemSection": {
+    "qitemsection": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/list-and-list-items"
         },
@@ -12362,7 +12362,7 @@
             }
         }
     },
-    "QItem": {
+    "qitem": {
         "mixins": [
             "composables/private.use-router-link/use-router-link"
         ],
@@ -12573,7 +12573,7 @@
         },
         "methods": {}
     },
-    "QItemLabel": {
+    "qitemlabel": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/list-and-list-items"
         },
@@ -12608,12 +12608,12 @@
             }
         }
     },
-    "QSpace": {
+    "qspace": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/space"
         }
     },
-    "QToolbarTitle": {
+    "qtoolbartitle": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/toolbar"
         },
@@ -12631,7 +12631,7 @@
             }
         }
     },
-    "QToolbar": {
+    "qtoolbar": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/toolbar"
         },
@@ -12649,7 +12649,7 @@
             }
         }
     },
-    "QColor": {
+    "qcolor": {
         "mixins": [
             "composables/use-form/private.use-form"
         ],
@@ -12807,7 +12807,7 @@
         "methods": {},
         "slots": {}
     },
-    "QParallax": {
+    "qparallax": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/parallax"
         },
@@ -12881,7 +12881,7 @@
             }
         }
     },
-    "QPageSticky": {
+    "qpagesticky": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/page-sticky"
         },
@@ -12924,7 +12924,7 @@
             }
         }
     },
-    "QDialog": {
+    "qdialog": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle",
             "composables/private.use-portal/use-portal",
@@ -13196,7 +13196,7 @@
             }
         }
     },
-    "QTimelineEntry": {
+    "qtimelineentry": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/timeline"
         },
@@ -13299,7 +13299,7 @@
             }
         }
     },
-    "QTimeline": {
+    "qtimeline": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/timeline"
         },
@@ -13396,7 +13396,7 @@
             }
         }
     },
-    "QInput": {
+    "qinput": {
         "mixins": [
             "composables/private.use-field/use-field",
             "components/input/use-mask",
@@ -13934,7 +13934,7 @@
             }
         }
     },
-    "QIntersection": {
+    "qintersection": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/intersection"
         },
@@ -14043,7 +14043,7 @@
             }
         }
     },
-    "QKnob": {
+    "qknob": {
         "mixins": [
             "composables/private.use-size/use-size",
             "composables/use-form/private.use-form"
@@ -14256,7 +14256,7 @@
         },
         "methods": {}
     },
-    "QPopupProxy": {
+    "qpopupproxy": {
         "mixins": [
             "composables/private.use-anchor/use-anchor"
         ],
@@ -14428,7 +14428,7 @@
             }
         }
     },
-    "QFile": {
+    "qfile": {
         "mixins": [
             "composables/private.use-field/use-field",
             "composables/private.use-file/use-file",
@@ -15102,7 +15102,7 @@
             }
         }
     },
-    "QLinearProgress": {
+    "qlinearprogress": {
         "mixins": [
             "composables/private.use-size/use-size"
         ],
@@ -15221,7 +15221,7 @@
         "events": {},
         "methods": {}
     },
-    "QTime": {
+    "qtime": {
         "mixins": [
             "components/date/use-datetime"
         ],
@@ -15537,7 +15537,7 @@
             }
         }
     },
-    "QIcon": {
+    "qicon": {
         "mixins": [
             "composables/private.use-size/use-size"
         ],
@@ -15610,7 +15610,7 @@
         "events": {},
         "methods": {}
     },
-    "QSplitter": {
+    "qsplitter": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/splitter"
         },
@@ -15761,7 +15761,7 @@
             }
         }
     },
-    "QResizeObserver": {
+    "qresizeobserver": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/resize-observer"
         },
@@ -15816,7 +15816,7 @@
             }
         }
     },
-    "QOptionGroup": {
+    "qoptiongroup": {
         "mixins": [
             "composables/private.use-size/use-size"
         ],
@@ -16173,7 +16173,7 @@
         },
         "methods": {}
     },
-    "QHeader": {
+    "qheader": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/header-and-footer"
         },
@@ -16242,7 +16242,7 @@
             }
         }
     },
-    "QSelect": {
+    "qselect": {
         "mixins": [
             "composables/private.use-field/use-field",
             "components/virtual-scroll/use-virtual-scroll",
@@ -17664,7 +17664,7 @@
             }
         }
     },
-    "QBadge": {
+    "qbadge": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/badge"
         },
@@ -17747,7 +17747,7 @@
             }
         }
     },
-    "QAvatar": {
+    "qavatar": {
         "mixins": [
             "composables/private.use-size/use-size"
         ],
@@ -17832,7 +17832,7 @@
         "events": {},
         "methods": {}
     },
-    "QPopupEdit": {
+    "qpopupedit": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/popup-edit"
         },
@@ -18356,7 +18356,7 @@
             }
         }
     },
-    "QVirtualScroll": {
+    "qvirtualscroll": {
         "mixins": [
             "components/virtual-scroll/use-virtual-scroll"
         ],
@@ -18588,7 +18588,7 @@
             }
         }
     },
-    "QTabPanels": {
+    "qtabpanels": {
         "mixins": [
             "composables/private.use-panel/use-panel"
         ],
@@ -18811,7 +18811,7 @@
             }
         }
     },
-    "QTabPanel": {
+    "qtabpanel": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/tab-panels"
         },
@@ -18846,7 +18846,7 @@
         "events": {},
         "methods": {}
     },
-    "QSlideTransition": {
+    "qslidetransition": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/slide-transition"
         },
@@ -18879,7 +18879,7 @@
             }
         }
     },
-    "QBtnDropdown": {
+    "qbtndropdown": {
         "mixins": [
             "components/btn/use-btn",
             "composables/private.use-model-toggle/use-model-toggle",
@@ -19435,7 +19435,7 @@
             }
         }
     },
-    "QBreadcrumbs": {
+    "qbreadcrumbs": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/breadcrumbs"
         },
@@ -19516,7 +19516,7 @@
             }
         }
     },
-    "QBreadcrumbsEl": {
+    "qbreadcrumbsel": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/breadcrumbs"
         },
@@ -19683,7 +19683,7 @@
         },
         "methods": {}
     },
-    "QBtnToggle": {
+    "qbtntoggle": {
         "mixins": [
             "composables/use-form/private.use-form"
         ],
@@ -19956,7 +19956,7 @@
         },
         "methods": {}
     },
-    "QDate": {
+    "qdate": {
         "mixins": [
             "components/date/use-datetime"
         ],
@@ -20735,7 +20735,7 @@
         "methods": {},
         "slots": {}
     },
-    "QForm": {
+    "qform": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/form"
         },
@@ -20852,7 +20852,7 @@
             }
         }
     },
-    "QFormChildMixin": {
+    "qformchildmixin": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/form"
         },
@@ -20878,7 +20878,7 @@
             }
         }
     },
-    "QImg": {
+    "qimg": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/img"
         },
@@ -21176,7 +21176,7 @@
         },
         "methods": {}
     },
-    "QSeparator": {
+    "qseparator": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/separator"
         },
@@ -21247,7 +21247,7 @@
             }
         }
     },
-    "QAjaxBar": {
+    "qajaxbar": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/ajax-bar"
         },
@@ -21363,7 +21363,7 @@
             }
         }
     },
-    "QSlider": {
+    "qslider": {
         "mixins": [
             "components/slider/use-slider"
         ],
@@ -22701,7 +22701,7 @@
         },
         "methods": {}
     },
-    "QScrollArea": {
+    "qscrollarea": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/scroll-area"
         },
@@ -23098,7 +23098,7 @@
             }
         }
     },
-    "QCardActions": {
+    "qcardactions": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/card"
         },
@@ -23131,7 +23131,7 @@
             }
         }
     },
-    "QCardSection": {
+    "qcardsection": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/card"
         },
@@ -23160,7 +23160,7 @@
             }
         }
     },
-    "QCard": {
+    "qcard": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/card"
         },
@@ -23212,7 +23212,7 @@
             }
         }
     },
-    "QPageScroller": {
+    "qpagescroller": {
         "mixins": [
             "components/page-sticky/QPageSticky"
         ],
@@ -23276,7 +23276,7 @@
             }
         }
     },
-    "QEditor": {
+    "qeditor": {
         "mixins": [
             "composables/private.use-fullscreen/use-fullscreen"
         ],
@@ -23777,7 +23777,7 @@
             }
         }
     },
-    "QRating": {
+    "qrating": {
         "mixins": [
             "composables/private.use-size/use-size",
             "composables/use-form/private.use-form"
@@ -23968,7 +23968,7 @@
         },
         "methods": {}
     },
-    "QTh": {
+    "qth": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/table"
         },
@@ -23999,7 +23999,7 @@
             }
         }
     },
-    "QTable": {
+    "qtable": {
         "mixins": [
             "composables/private.use-fullscreen/use-fullscreen"
         ],
@@ -26678,7 +26678,7 @@
             }
         }
     },
-    "QTr": {
+    "qtr": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/table"
         },
@@ -26704,7 +26704,7 @@
             }
         }
     },
-    "QTd": {
+    "qtd": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/table"
         },
@@ -26735,7 +26735,7 @@
             }
         }
     },
-    "QCircularProgress": {
+    "qcircularprogress": {
         "mixins": [
             "composables/private.use-size/use-size"
         ],
@@ -26884,7 +26884,7 @@
         "events": {},
         "methods": {}
     },
-    "QCarouselSlide": {
+    "qcarouselslide": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/carousel"
         },
@@ -26924,7 +26924,7 @@
         "events": {},
         "methods": {}
     },
-    "QCarousel": {
+    "qcarousel": {
         "mixins": [
             "composables/private.use-panel/use-panel",
             "composables/private.use-fullscreen/use-fullscreen"
@@ -27362,7 +27362,7 @@
             }
         }
     },
-    "QCarouselControl": {
+    "qcarouselcontrol": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/carousel"
         },
@@ -27401,7 +27401,7 @@
             }
         }
     },
-    "QNoSsr": {
+    "qnossr": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/no-ssr"
         },
@@ -27436,7 +27436,7 @@
             }
         }
     },
-    "QScrollObserver": {
+    "qscrollobserver": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/scroll-observer"
         },
@@ -27578,7 +27578,7 @@
             }
         }
     },
-    "QStepper": {
+    "qstepper": {
         "mixins": [
             "composables/private.use-panel/use-panel"
         ],
@@ -27937,7 +27937,7 @@
             }
         }
     },
-    "QStepperNavigation": {
+    "qsteppernavigation": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/stepper"
         },
@@ -27947,7 +27947,7 @@
             }
         }
     },
-    "QStep": {
+    "qstep": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/stepper"
         },
@@ -28130,7 +28130,7 @@
         },
         "methods": {}
     },
-    "QInfiniteScroll": {
+    "qinfinitescroll": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/infinite-scroll"
         },
@@ -28258,7 +28258,7 @@
             }
         }
     },
-    "QToggle": {
+    "qtoggle": {
         "mixins": [
             "components/checkbox/use-checkbox"
         ],
@@ -28479,7 +28479,7 @@
             }
         }
     },
-    "QInnerLoading": {
+    "qinnerloading": {
         "mixins": [
             "composables/private.use-size/use-size",
             "composables/private.use-transition/use-transition"
@@ -28596,7 +28596,7 @@
         "events": {},
         "methods": {}
     },
-    "QPageContainer": {
+    "qpagecontainer": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/page"
         },
@@ -28606,7 +28606,7 @@
             }
         }
     },
-    "QPage": {
+    "qpage": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/page"
         },
@@ -28646,7 +28646,7 @@
             }
         }
     },
-    "QExpansionItem": {
+    "qexpansionitem": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle",
             "composables/private.use-router-link/use-router-link"
@@ -29101,7 +29101,7 @@
             }
         }
     },
-    "QTabs": {
+    "qtabs": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/tabs"
         },
@@ -29284,7 +29284,7 @@
             }
         }
     },
-    "QRouteTab": {
+    "qroutetab": {
         "mixins": [
             "components/tabs/use-tab",
             "composables/private.use-router-link/use-router-link"
@@ -29638,7 +29638,7 @@
             }
         }
     },
-    "QTab": {
+    "qtab": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/tabs"
         },
@@ -29763,7 +29763,7 @@
             }
         }
     },
-    "QVideo": {
+    "qvideo": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/video"
         },
@@ -29849,7 +29849,7 @@
         "methods": {},
         "slots": {}
     },
-    "QPullToRefresh": {
+    "qpulltorefresh": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/pull-to-refresh"
         },
@@ -29948,7 +29948,7 @@
             }
         }
     },
-    "QField": {
+    "qfield": {
         "mixins": [
             "composables/private.use-field/use-field"
         ],
@@ -30389,7 +30389,7 @@
             }
         }
     },
-    "QRange": {
+    "qrange": {
         "mixins": [
             "components/slider/use-slider"
         ],
@@ -31193,7 +31193,7 @@
             }
         }
     },
-    "QBtnGroup": {
+    "qbtngroup": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/button-group"
         },
@@ -31252,7 +31252,7 @@
             }
         }
     },
-    "QTree": {
+    "qtree": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/tree"
         },
@@ -31860,7 +31860,7 @@
             }
         }
     },
-    "QLayout": {
+    "qlayout": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/layout"
         },
@@ -31958,7 +31958,7 @@
             }
         }
     },
-    "QFabAction": {
+    "qfabaction": {
         "mixins": [
             "components/fab/use-fab"
         ],
@@ -32372,7 +32372,7 @@
             }
         }
     },
-    "QFab": {
+    "qfab": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle",
             "components/fab/use-fab"
@@ -32699,7 +32699,7 @@
             }
         }
     },
-    "QFooter": {
+    "qfooter": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/layout/header-and-footer"
         },
@@ -32762,7 +32762,7 @@
             }
         }
     },
-    "QPagination": {
+    "qpagination": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/pagination"
         },
@@ -33419,7 +33419,7 @@
         "methods": {},
         "slots": {}
     },
-    "QBtn": {
+    "qbtn": {
         "mixins": [
             "components/btn/use-btn"
         ],
@@ -33792,7 +33792,7 @@
             }
         }
     },
-    "QRadio": {
+    "qradio": {
         "mixins": [
             "composables/private.use-size/use-size",
             "composables/use-form/private.use-form"
@@ -33958,7 +33958,7 @@
             }
         }
     },
-    "QResponsive": {
+    "qresponsive": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/responsive"
         },
@@ -33990,7 +33990,7 @@
         "events": {},
         "methods": {}
     },
-    "QDrawer": {
+    "qdrawer": {
         "mixins": [
             "composables/private.use-model-toggle/use-model-toggle"
         ],
@@ -34266,7 +34266,7 @@
             }
         }
     },
-    "QSlideItem": {
+    "qslideitem": {
         "meta": {
             "docsUrl": "https://v2.quasar.dev/vue-components/slide-item"
         },

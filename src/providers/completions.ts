@@ -47,6 +47,38 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		this.context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, this));
 	}
 
+	async request_hover(document: TextDocument, position: Position): Promise<string | null> {
+		if (!this.pylance?.isActive) {
+			return null;
+		}
+		const client = await this.pylance.exports.client.getClient();
+
+		const response = await client._connection.sendRequest("textDocument/hover", {
+			textDocument: { uri: document.uri.toString() },
+			position: {
+				line: position.line,
+				character: position.character,
+			},
+		});
+		return response?.contents?.value ?? null;
+	}
+
+	async request_type(document: TextDocument, position: Position): Promise<string | null> {
+		if (!this.pylance?.isActive) {
+			return null;
+		}
+		const client = await this.pylance.exports.client.getClient();
+
+		const response = await client._connection.sendRequest("textDocument/typeDefinition", {
+			textDocument: { uri: document.uri.toString() },
+			position: {
+				line: position.line,
+				character: position.character,
+			},
+		});
+		return response?.contents?.value ?? null;
+	}
+
 	async provideCompletionItems(
 		document: TextDocument,
 		position: Position,
@@ -83,47 +115,63 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			return build_completions(tailwindClasses, word, wordRange);
 		}
 
-		let className: string = null;
+		const offset = document.offsetAt(position) - result[0].length;
 
-		if (this.pylance?.isActive) {
-			const client = await this.pylance.exports.client.getClient();
+		// define an internal function just for flow control
+		const determine_class = async () => {
+			if (["classes", "props", "style", "on"].includes(result[1])) {
+				const hoverPosition = document.positionAt(offset + 1);
+				const body = await this.request_hover(document, hoverPosition);
+				if (["classes", "props", "style"].includes(result[1])) {
+					const match = body.match(
+						/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
+					);
+					if (match) {
+						return match[1];
+					}
+				} else if (["on"].includes(result[1])) {
+					const match = body.match(/\(method\) def on\([^\)]*\) -> (\w+)/m);
+					if (match) {
+						return match[1];
+					}
+				}
+			} else {
+				log.debug("other");
 
-			const offset = document.offsetAt(position);
-			const hoverPosition = document.positionAt(
-				offset - (result[0].length - 1),
-			);
-
-			const response = await client._connection.sendRequest(
-				"textDocument/hover",
-				{
-					textDocument: { uri: document.uri.toString() },
-					position: {
-						line: hoverPosition.line,
-						character: hoverPosition.character,
-					},
-				},
-			);
-			const body = response.contents.value;
-
-			let possibleClass = "";
-
-			if (["classes", "props", "style"].includes(result[1])) {
-				possibleClass = body.match(
-					/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
-				);
-			} else if (["on"].includes(result[1])) {
-				possibleClass = body.match(/\(method\) def on\([^\)]*\) -> (\w+)/m);
+                //TODO: fix this awful mess
+				const body1 = await this.request_hover(document, document.positionAt(offset - 1));
+				log.debug("body1", body1);
+				if (body1) {
+					const match = body1.match(/\(variable\) [\w_]*: ([\w_]+)/);
+					log.debug("match1", match);
+					if (match) {
+						return match[1];
+					}
+				}
+				const body2 = await this.request_hover(document, document.positionAt(offset - 3));
+				log.debug("body2", body2);
+				if (body2) {
+					const match = body2.match(/class ([\w_]+)\(/);
+					log.debug("match2", match);
+					if (match) {
+						return match[1];
+					}
+				}
 			}
+			return null;
+		};
 
-			if (possibleClass) {
-				className = `Q${possibleClass[1]}`;
-				// Convert NiceGUI types to Quasar types
-				className = className.replace("Button", "Btn");
-				className = className.replace("Image", "Img");
-			}
+		let className = null;
+		const possibleClass = await determine_class();
+		if (possibleClass) {
+			// Convert NiceGUI types to Quasar types
+			className = `Q${possibleClass}`;
+			className = className.replace("Button", "Btn");
+			className = className.replace("Image", "Img");
+			className = className.toLowerCase();
 		}
 
-		// log.debug("className", className);
+		log.debug("className", className);
 
 		function build_item(name, data) {
 			const item = new CompletionItem(name);
@@ -141,9 +189,9 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		const items = [];
 
-		if (className) {
+		const classData = quasarInfo[className];
+		if (classData) {
 			log.debug("using quasar metadata");
-			const classData = quasarInfo[className];
 			switch (result[1]) {
 				case "props":
 					for (const [name, body] of Object.entries(classData.props ?? {})) {
