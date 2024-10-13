@@ -15,6 +15,11 @@ ui.table().props('')
 ui.table().run_method('')
 ui.table().on('')
 
+with ui.table() as table:
+    table.props('')
+    table.on('')
+    table.run_method('')
+    table.add_slot('')
 
 button = ui.button()
 button.props('')

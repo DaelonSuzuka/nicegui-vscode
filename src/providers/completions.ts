@@ -114,9 +114,15 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			);
 			const body = response.contents.value;
 
-			const possibleClass = body.match(
-				/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
-			);
+			let possibleClass = "";
+
+			if (["classes", "props", "style"].includes(result[1])) {
+				possibleClass = body.match(
+					/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
+				);
+			} else if (["on"].includes(result[1])) {
+				possibleClass = body.match(/\(method\) def on\([^\)]*\) -> (\w+)/m);
+			}
 
 			if (possibleClass) {
 				className = `Q${possibleClass[1]}`;
@@ -126,55 +132,91 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			}
 		}
 
-		log.debug("className", className);
+		// log.debug("className", className);
 
-		const classData = quasarInfo[className];
+		function build_item(name, data) {
+			const item = new CompletionItem(name);
+			if (typeof data.type === "string") {
+				item.detail = data.type;
+			} else if (Array.isArray(data.type)) {
+				item.detail = data.type.join(" | ");
+			}
+			item.documentation = data.desc;
+			if (word !== "") {
+				item.range = wordRange;
+			}
+			return item;
+		}
 
 		const items = [];
 
-		// log.debug("word", word);
-
-		switch (result[1]) {
-			case "props":
-				if (classData?.props) {
-					const props = classData.props;
-					for (const possible in props) {
-						if (word === "" || possible.includes(word)) {
-							const item = new CompletionItem(possible);
-							const prop = props[possible];
-							item.detail = prop.type;
-							item.documentation = prop.desc;
-							if (word !== "") {
-								item.range = wordRange;
-							}
+		if (className) {
+			log.debug("using quasar metadata");
+			const classData = quasarInfo[className];
+			switch (result[1]) {
+				case "props":
+					for (const [name, body] of Object.entries(classData.props ?? {})) {
+						if (word === "" || name.includes(word)) {
+							const item = build_item(name, body);
 							items.push(item);
 						}
 					}
-				} else {
-					items.push(...build_completions(quasarProps, word, wordRange));
-				}
-				break;
-			case "add_slot":
-				// log.debug("slots");
-				items.push(...build_completions(quasarSlots, word, wordRange));
-				break;
-			case "on":
-				// log.debug("events");
-				items.push(...build_completions(quasarEvents, word, wordRange));
-				break;
-			case "run_method":
-				// log.debug("methods");
-				items.push(...build_completions(quasarMethods, word, wordRange));
-				break;
-			case "style":
-				// log.debug("style");
-				break;
+					break;
+				case "add_slot":
+					for (const [name, body] of Object.entries(classData.slots ?? {})) {
+						if (word === "" || name.includes(word)) {
+							const item = build_item(name, body);
+							items.push(item);
+						}
+					}
+					break;
+				case "on":
+					for (const [name, body] of Object.entries(classData.events ?? {})) {
+						if (word === "" || name.includes(word)) {
+							const item = build_item(name, body);
+							items.push(item);
+						}
+					}
+					break;
+				case "run_method":
+					for (const [name, body] of Object.entries(classData.methods ?? {})) {
+						if (word === "" || name.includes(word)) {
+							const item = build_item(name, body);
+							items.push(item);
+						}
+					}
+					break;
+				case "style":
+					// log.debug("style");
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
+		} else {
+			log.debug("using full lists");
+			switch (result[1]) {
+				case "props":
+					items.push(...build_completions(quasarProps, word, wordRange));
+					break;
+				case "add_slot":
+					items.push(...build_completions(quasarSlots, word, wordRange));
+					break;
+				case "on":
+					items.push(...build_completions(quasarEvents, word, wordRange));
+					break;
+				case "run_method":
+					items.push(...build_completions(quasarMethods, word, wordRange));
+					break;
+				case "style":
+					// log.debug("style");
+					break;
+				default:
+					break;
+			}
 		}
 
-		// log.debug("found ", items);
+		// log.debug("found ", items.length);
 		return items;
 	}
 }
