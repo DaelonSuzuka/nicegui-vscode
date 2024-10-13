@@ -44,9 +44,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		this.pylance = vscode.extensions.getExtension("ms-python.vscode-pylance");
 
-		this.context.subscriptions.push(
-			vscode.languages.registerCompletionItemProvider(selector, this),
-		);
+		this.context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, this));
 	}
 
 	async provideCompletionItems(
@@ -58,25 +56,18 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		// log.debug("provideCompletionItems");
 
 		// get the entire line up until the cursor
-		const linePrefix = document
-			.lineAt(position)
-			.text.slice(0, position.character);
+		const linePrefix = document.lineAt(position).text.slice(0, position.character);
 		// log.debug("linePrefix", linePrefix);
 
 		// look backwards for ".classes("
-		const result = linePrefix.match(
-			/.(props|classes|style|on|run_method|add_slot)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/,
-		);
+		const result = linePrefix.match(/.(props|classes|style|on|run_method|add_slot)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/);
 
 		if (!result) {
 			return undefined;
 		}
 
 		// get the range of the word from under the cursor
-		const wordRange = document.getWordRangeAtPosition(
-			position,
-			/\b[\w-]+\b|([\"'])\1/,
-		);
+		const wordRange = document.getWordRangeAtPosition(position, /\b[\w-]+\b|([\"'])\1/);
 
 		// convert the range into the actual word
 		let word = "";

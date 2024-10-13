@@ -1,5 +1,11 @@
 {
+    "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
     "files": {
         "maxSize": 5000000
+    },
+    "formatter": {
+        "formatWithErrors": true,
+        "indentStyle": "tab",
+        "lineWidth": 120
     }
 }
