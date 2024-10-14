@@ -136,23 +136,23 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 					}
 				}
 			} else {
-				log.debug("other");
+				// log.debug("other");
 
                 //TODO: fix this awful mess
 				const body1 = await this.request_hover(document, document.positionAt(offset - 1));
-				log.debug("body1", body1);
+				// log.debug("body1", body1);
 				if (body1) {
 					const match = body1.match(/\(variable\) [\w_]*: ([\w_]+)/);
-					log.debug("match1", match);
+					// log.debug("match1", match);
 					if (match) {
 						return match[1];
 					}
 				}
 				const body2 = await this.request_hover(document, document.positionAt(offset - 3));
-				log.debug("body2", body2);
+				// log.debug("body2", body2);
 				if (body2) {
 					const match = body2.match(/class ([\w_]+)\(/);
-					log.debug("match2", match);
+					// log.debug("match2", match);
 					if (match) {
 						return match[1];
 					}
@@ -171,7 +171,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			className = className.toLowerCase();
 		}
 
-		log.debug("className", className);
+		// log.debug("className", className);
 
 		function build_item(name, data) {
 			const item = new CompletionItem(name);
@@ -191,7 +191,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		const classData = quasarInfo[className];
 		if (classData) {
-			log.debug("using quasar metadata");
+			// log.debug("using quasar metadata");
 			switch (result[1]) {
 				case "props":
 					for (const [name, body] of Object.entries(classData.props ?? {})) {
@@ -233,7 +233,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 					break;
 			}
 		} else {
-			log.debug("using full lists");
+			// log.debug("using full lists");
 			switch (result[1]) {
 				case "props":
 					items.push(...build_completions(quasarProps, word, wordRange));
