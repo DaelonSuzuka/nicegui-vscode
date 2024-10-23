@@ -19,7 +19,7 @@ function enable_string_suggestions() {
 	const config = get_config("", scope);
 	const currentValue = config.get(setting, {});
 	const value = { ...currentValue, ...{ strings: "on" } };
-	config.update(setting, value);
+	config.update(setting, value, true);
 }
 
 export function deactivate() {
