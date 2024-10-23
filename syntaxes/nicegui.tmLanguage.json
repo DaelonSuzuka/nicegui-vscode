@@ -13,7 +13,7 @@
             "endCaptures": { "1": { "name": "punctuation.definition.arguments.end.python" } },
             "patterns": [
                 {
-                    "match": "[\\n\\s]*('|\")([\\w-]*)(\\1)[\\n\\s]*(,)?[\\n\\s]*",
+                    "match": "[\\n\\s]*('|\")([\\s\\w-]*)(\\1)[\\n\\s]*(,)?[\\n\\s]*",
                     "captures": {
                         "1": { "name": "string.quoted.python punctuation.definition.string.begin.python" },
                         "2": { "name": "string.quoted.python" },
