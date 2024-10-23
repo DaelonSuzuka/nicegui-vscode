@@ -21,7 +21,7 @@ import {
 } from "./data";
 import { createLogger } from "../utils";
 
-const log = createLogger("providers.tw");
+const log = createLogger("completions");
 
 function build_completions(list: string[], word: string, wordRange: Range) {
 	const items: CompletionItem[] = [];
