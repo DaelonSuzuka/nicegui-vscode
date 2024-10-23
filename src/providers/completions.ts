@@ -89,12 +89,13 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 	): Promise<CompletionItem[] | CompletionList<CompletionItem>> {
 		// log.debug("provideCompletionItems");
 
-		// get the entire line up until the cursor
-		const linePrefix = document.lineAt(position).text.slice(0, position.character);
-		// log.debug("linePrefix", linePrefix);
+		// get the entire text up until the cursor
+		//! performance implications?
+		const prefix = document.getText().slice(0, document.offsetAt(position));
+		// log.debug("prefix", prefix);
 
-		// look backwards for ".classes("
-		const result = linePrefix.match(/.(props|classes|style|on|run_method|add_slot)\s*\([\"'](?:(?:\b[\w-]+\b)?\s*?)+$/);
+		// look backwards for ".<func>("
+		const result = prefix.match(/.(props|classes|style|on|run_method|add_slot)\s*\(\s*[\"'](?:(?:\b[\w-]+\b)?\s*?)+$/m);
 
 		if (!result) {
 			return undefined;
