@@ -52,6 +52,12 @@
                     "meta.embedded.inline.sass": "sass"
                 }
             }
+        ],
+        "snippets": [
+            {
+                "language": "python",
+                "path": "./configurations/snippets.json"
+            }
         ]
     },
     "devDependencies": {
