@@ -10,18 +10,20 @@ import type {
 	Range,
 } from "vscode";
 import { CompletionItem } from "vscode";
-import tailwindClasses from "../../assets/tailwind_classes.json";
-import quasarInfo from "../../assets/quasar_components.json";
-import quasarProps from "../../assets/quasar_props.json";
-import quasarEvents from "../../assets/quasar_events.json";
-import quasarMethods from "../../assets/quasar_methods.json";
-import quasarSlots from "../../assets/quasar_slots.json";
-
+import {
+	type JSONObject,
+	quasarData,
+	quasarProps,
+	quasarEvents,
+	quasarMethods,
+	quasarSlots,
+	tailwindClasses,
+} from "./data";
 import { createLogger } from "../utils";
 
 const log = createLogger("providers.tw");
 
-function build_completions(list, word: string, wordRange: Range) {
+function build_completions(list: string[], word: string, wordRange: Range) {
 	const items: CompletionItem[] = [];
 	for (const possible of list) {
 		if (word === "") {
@@ -138,7 +140,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			} else {
 				// log.debug("other");
 
-                //TODO: fix this awful mess
+				//TODO: fix this awful mess
 				const body1 = await this.request_hover(document, document.positionAt(offset - 1));
 				// log.debug("body1", body1);
 				if (body1) {
@@ -173,14 +175,14 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		// log.debug("className", className);
 
-		function build_item(name, data) {
+		function build_item(name: string, data: JSONObject) {
 			const item = new CompletionItem(name);
 			if (typeof data.type === "string") {
 				item.detail = data.type;
 			} else if (Array.isArray(data.type)) {
 				item.detail = data.type.join(" | ");
 			}
-			item.documentation = data.desc;
+			item.documentation = data.desc as string;
 			if (word !== "") {
 				item.range = wordRange;
 			}
@@ -189,7 +191,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		const items = [];
 
-		const classData = quasarInfo[className];
+		const classData = quasarData[className];
 		if (classData) {
 			// log.debug("using quasar metadata");
 			switch (result[1]) {
