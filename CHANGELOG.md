@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.6.1
+
+- Fix suggestion setting being written to the wrong place
+
 ### 0.6.0
 
 - Feature: Improve display of prop suggestions
