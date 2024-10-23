@@ -20,6 +20,10 @@ with ui.table() as table:
     table.on('')
     table.run_method('')
     table.add_slot('')
+    table.add_slot(
+        '',
+        """<div></div>"""
+    )
 
 button = ui.button()
 button.props('')
