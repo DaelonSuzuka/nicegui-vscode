@@ -53,6 +53,17 @@
                 }
             }
         ],
+        "configuration": {
+            "type": "object",
+            "title": "NiceGUI",
+            "properties": {
+                "nicegui.enableStringSuggestions": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to automatically 'Quick Suggestions' in strings."
+                }
+            }
+        },
         "snippets": [
             {
                 "language": "python",
