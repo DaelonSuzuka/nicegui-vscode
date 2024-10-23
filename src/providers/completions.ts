@@ -5,13 +5,15 @@ import type {
 	CancellationToken,
 	CompletionContext,
 	CompletionList,
+	CompletionItemLabel,
 	CompletionItemProvider,
 	ExtensionContext,
 	Range,
 } from "vscode";
-import { CompletionItem } from "vscode";
+import { CompletionItem, MarkdownString, SnippetString } from "vscode";
 import {
 	type JSONObject,
+    type JSONValue,
 	quasarData,
 	quasarProps,
 	quasarEvents,
@@ -35,6 +37,15 @@ function build_completions(list: string[], word: string, wordRange: Range) {
 		}
 	}
 	return items;
+}
+
+function flatten(item: string | string[] | JSONValue, join: string): string {
+	if (typeof item === "string") {
+		return item;
+	}
+	if (Array.isArray(item)) {
+		return item.join(join);
+	}
 }
 
 export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
@@ -177,13 +188,53 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		// log.debug("className", className);
 
 		function build_item(name: string, data: JSONObject) {
-			const item = new CompletionItem(name);
-			if (typeof data.type === "string") {
-				item.detail = data.type;
-			} else if (Array.isArray(data.type)) {
-				item.detail = data.type.join(" | ");
+			const label: CompletionItemLabel = {
+				label: name,
+				// detail: '',
+				// description: '',
+			};
+			label.description = flatten(data.type, " | ");
+
+			log.debug(data.returns, data.params, data.returns !== undefined);
+			if (data.params !== undefined && data.returns !== undefined) {
+				let params = "void";
+				if (data.params !== null) {
+					// const _params: string[] = [];
+					// for (const [param, body] of Object.entries(data.params)) {
+					// 	const type = flatten(body.type, " | ");
+					// 	const p = `${param}: ${type}`;
+					// 	_params.push(p);
+					// }
+
+					// params = _params.join(", ");
+					params = Object.keys(data.params).join(", ");
+				}
+				let returns = "void";
+				if (data.returns !== null) {
+					returns = Object.keys(data.returns).join(", ");
+				}
+				label.description = `(${params}) => ${returns}`;
+			} else if (data.params !== undefined) {
+				let params = "void";
+				if (data.returns !== null) {
+					params = Object.keys(data.params).join(", ");
+				}
+				label.description = `(${params})`;
 			}
-			item.documentation = data.desc as string;
+
+			const item = new CompletionItem(label);
+
+			if (name.includes("[")) {
+				const insert = new SnippetString();
+				const parts = name.split("[");
+				insert.appendText(parts[0]);
+				insert.appendPlaceholder(`[${parts[1]}`);
+				item.insertText = insert;
+			}
+
+			const doc = new MarkdownString();
+			doc.appendText(data.desc as string);
+			item.documentation = doc;
 			if (word !== "") {
 				item.range = wordRange;
 			}
