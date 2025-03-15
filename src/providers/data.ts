@@ -25,6 +25,13 @@ export interface QuasarComponentList {
 	[k: string]: QuasarComponent;
 }
 
+export interface QuasarGenericLists {
+	props: string[];
+	events: string[];
+	slots: string[];
+	methods: string[];
+}
+
 function get_extension_uri(...paths: string[]) {
 	return vscode.Uri.joinPath(vscode.extensions.getExtension('DaelonSuzuka.nicegui').extensionUri, ...(paths ?? ''));
 }
@@ -35,8 +42,5 @@ function load(file: string) {
 }
 
 export const quasarData: QuasarComponentList = load('quasar_components.json');
-export const quasarProps: string[] = load('quasar_props.json');
-export const quasarEvents: string[] = load('quasar_events.json');
-export const quasarMethods: string[] = load('quasar_methods.json');
-export const quasarSlots: string[] = load('quasar_slots.json');
+export const quasarLists: QuasarGenericLists = load('quasar_lists.json');
 export const tailwindClasses: string[] = load('tailwind_classes.json');

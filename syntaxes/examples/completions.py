@@ -1,7 +1,18 @@
 from nicegui import ui
 
 
+with ui.row().classes('test w-full w-0.5  w-10/12 w-1'):
+    pass
+
 with ui.row().classes(''):
+    pass
+
+with ui.row().classes(
+    'test w-full w-0.5'
+    ):
+    pass
+
+with ui.row().classes(add='w-full  ', remove='w-', replace="w"):
     ui.button('1')
     ui.button('2')
 

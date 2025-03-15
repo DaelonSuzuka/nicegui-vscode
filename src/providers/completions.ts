@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 import type {
 	Position,
 	TextDocument,
@@ -9,26 +9,17 @@ import type {
 	CompletionItemProvider,
 	ExtensionContext,
 	Range,
-} from "vscode";
-import { CompletionItem, MarkdownString, SnippetString } from "vscode";
-import {
-	type JSONObject,
-    type JSONValue,
-	quasarData,
-	quasarProps,
-	quasarEvents,
-	quasarMethods,
-	quasarSlots,
-	tailwindClasses,
-} from "./data";
-import { createLogger } from "../utils";
+} from 'vscode';
+import { CompletionItem, MarkdownString, SnippetString } from 'vscode';
+import { type JSONObject, type JSONValue, quasarData, quasarLists, tailwindClasses } from './data';
+import { createLogger } from '../utils';
 
-const log = createLogger("completions");
+const log = createLogger('completions');
 
 function build_completions(list: string[], word: string, wordRange: Range) {
 	const items: CompletionItem[] = [];
 	for (const possible of list) {
-		if (word === "") {
+		if (word === '') {
 			items.push(new CompletionItem(possible));
 		} else if (possible.includes(word)) {
 			const item = new CompletionItem(possible);
@@ -40,7 +31,7 @@ function build_completions(list: string[], word: string, wordRange: Range) {
 }
 
 function flatten(item: string | string[] | JSONValue, join: string): string {
-	if (typeof item === "string") {
+	if (typeof item === 'string') {
 		return item;
 	}
 	if (Array.isArray(item)) {
@@ -48,14 +39,31 @@ function flatten(item: string | string[] | JSONValue, join: string): string {
 	}
 }
 
+function get_word_at_range(document: TextDocument, range: Range) {
+	let word = null;
+	if (range !== undefined) {
+		word = document.getText(range);
+		if (['""', "''"].includes(word)) {
+			word = '';
+		}
+	}
+	return word;
+}
+
+function get_word_at_position(document: TextDocument, position: Position, regex?: RegExp) {
+	const range = document.getWordRangeAtPosition(position, regex);
+	// log.debug("get_word_at_position", range, position, range.contains(position));
+	return get_word_at_range(document, range);
+}
+
 export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 	// biome-ignore lint/suspicious/noExplicitAny: <vscode API?>
 	pylance: vscode.Extension<any>;
 
 	constructor(private context: ExtensionContext) {
-		const selector = [{ language: "python", scheme: "file" }];
+		const selector = [{ language: 'python', scheme: 'file' }];
 
-		this.pylance = vscode.extensions.getExtension("ms-python.vscode-pylance");
+		this.pylance = vscode.extensions.getExtension('ms-python.vscode-pylance');
 
 		this.context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, this));
 	}
@@ -66,7 +74,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		}
 		const client = await this.pylance.exports.client.getClient();
 
-		const response = await client._connection.sendRequest("textDocument/hover", {
+		const response = await client._connection.sendRequest('textDocument/hover', {
 			textDocument: { uri: document.uri.toString() },
 			position: {
 				line: position.line,
@@ -82,7 +90,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		}
 		const client = await this.pylance.exports.client.getClient();
 
-		const response = await client._connection.sendRequest("textDocument/typeDefinition", {
+		const response = await client._connection.sendRequest('textDocument/typeDefinition', {
 			textDocument: { uri: document.uri.toString() },
 			position: {
 				line: position.line,
@@ -98,7 +106,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		token: CancellationToken,
 		context: CompletionContext,
 	): Promise<CompletionItem[] | CompletionList<CompletionItem>> {
-		// log.debug("provideCompletionItems");
+		// log.debug('----------- provideCompletionItems -----------');
 
 		// get the entire text up until the cursor
 		//! performance implications?
@@ -106,44 +114,64 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		// log.debug("prefix", prefix);
 
 		// look backwards for ".<func>("
-		const result = prefix.match(/\.(props|classes|style|on|run_method|add_slot)\s*\(\s*[\"'](?:(?:\b[\w/\[\]-]+\b)?\s*?)+$/m);
+		const result = prefix.match(/\.\s*(props|classes|style|on|run_method|add_slot)\s*\(\s*[^\)]+$/);
+		// log.debug('result', result);
 
 		if (!result) {
 			return undefined;
 		}
 
-		// get the range of the word from under the cursor
-		const wordRange = document.getWordRangeAtPosition(position, /\b[\w-]+\b|([\"'])\1/);
+		// get the string literal from under the cursor
+		const surroundPattern = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
+		const surround = get_word_at_position(document, position, surroundPattern);
+		// log.debug(`surround ${surround}`);
 
-		// convert the range into the actual word
-		let word = "";
-		if (wordRange !== undefined) {
-			word = document.getText(wordRange);
-			if (['""', "''"].includes(word)) {
-				word = "";
-			}
-		}
+		// get the word from under the cursor
+		const wordPattern = /[\.\w\/-]+|([\"'])\1/;
+		const wordRange = document.getWordRangeAtPosition(position, wordPattern);
+		const word = get_word_at_range(document, wordRange) ?? '';
+		// log.debug(`word ${word}`);
+
+		const map = {
+			classes: 'classes',
+			props: 'props',
+			add_slot: 'slots',
+			on: 'events',
+			run_method: 'methods',
+			style: 'style',
+		};
+
+		const kind = map[result[1]];
+		// log.debug('kind', kind);
 
 		// ironically, "classes" doesn't rely on knowing the class
-		if (result[1] === "classes") {
+		if (kind === 'classes') {
+			if (surround === null) {
+				return undefined;
+			}
 			return build_completions(tailwindClasses, word, wordRange);
+		}
+
+		// style not supported yet
+		if (kind === 'style') {
+			return undefined;
 		}
 
 		const offset = document.offsetAt(position) - result[0].length;
 
 		// define an internal function just for flow control
 		const determine_class = async () => {
-			if (["classes", "props", "style", "on"].includes(result[1])) {
+			if (['classes', 'props', 'style', 'events'].includes(kind)) {
 				const hoverPosition = document.positionAt(offset + 1);
 				const body = await this.request_hover(document, hoverPosition);
-				if (["classes", "props", "style"].includes(result[1])) {
+				if (['classes', 'props', 'style'].includes(kind)) {
 					const match = body.match(
 						/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
 					);
 					if (match) {
 						return match[1];
 					}
-				} else if (["on"].includes(result[1])) {
+				} else if (['events'].includes(kind)) {
 					const match = body.match(/\(method\) def on\([^\)]*\) -> (\w+)/m);
 					if (match) {
 						return match[1];
@@ -180,12 +208,10 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		if (possibleClass) {
 			// Convert NiceGUI types to Quasar types
 			className = `Q${possibleClass}`;
-			className = className.replace("Button", "Btn");
-			className = className.replace("Image", "Img");
+			className = className.replace('Button', 'Btn');
+			className = className.replace('Image', 'Img');
 			className = className.toLowerCase();
 		}
-
-		// log.debug("className", className);
 
 		function build_item(name: string, data: JSONObject) {
 			const label: CompletionItemLabel = {
@@ -193,11 +219,11 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 				// detail: '',
 				// description: '',
 			};
-			label.description = flatten(data.type, " | ");
+			label.description = flatten(data.type, ' | ');
 
-			log.debug(data.returns, data.params, data.returns !== undefined);
+			// log.debug(data.returns, data.params, data.returns !== undefined);
 			if (data.params !== undefined && data.returns !== undefined) {
-				let params = "void";
+				let params = 'void';
 				if (data.params !== null) {
 					// const _params: string[] = [];
 					// for (const [param, body] of Object.entries(data.params)) {
@@ -207,26 +233,26 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 					// }
 
 					// params = _params.join(", ");
-					params = Object.keys(data.params).join(", ");
+					params = Object.keys(data.params).join(', ');
 				}
-				let returns = "void";
+				let returns = 'void';
 				if (data.returns !== null) {
-					returns = Object.keys(data.returns).join(", ");
+					returns = Object.keys(data.returns).join(', ');
 				}
 				label.description = `(${params}) => ${returns}`;
 			} else if (data.params !== undefined) {
-				let params = "void";
+				let params = 'void';
 				if (data.returns !== null) {
-					params = Object.keys(data.params).join(", ");
+					params = Object.keys(data.params).join(', ');
 				}
 				label.description = `(${params})`;
 			}
 
 			const item = new CompletionItem(label);
 
-			if (name.includes("[")) {
+			if (name.includes('[')) {
 				const insert = new SnippetString();
-				const parts = name.split("[");
+				const parts = name.split('[');
 				insert.appendText(parts[0]);
 				insert.appendPlaceholder(`[${parts[1]}`);
 				item.insertText = insert;
@@ -235,7 +261,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			const doc = new MarkdownString();
 			doc.appendText(data.desc as string);
 			item.documentation = doc;
-			if (word !== "") {
+			if (word !== '') {
 				item.range = wordRange;
 			}
 			return item;
@@ -244,69 +270,25 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		const items = [];
 
 		const classData = quasarData[className];
-		if (classData) {
-			// log.debug("using quasar metadata");
-			switch (result[1]) {
-				case "props":
-					for (const [name, body] of Object.entries(classData.props ?? {})) {
-						if (word === "" || name.includes(word)) {
-							const item = build_item(name, body);
-							items.push(item);
-						}
-					}
-					break;
-				case "add_slot":
-					for (const [name, body] of Object.entries(classData.slots ?? {})) {
-						if (word === "" || name.includes(word)) {
-							const item = build_item(name, body);
-							items.push(item);
-						}
-					}
-					break;
-				case "on":
-					for (const [name, body] of Object.entries(classData.events ?? {})) {
-						if (word === "" || name.includes(word)) {
-							const item = build_item(name, body);
-							items.push(item);
-						}
-					}
-					break;
-				case "run_method":
-					for (const [name, body] of Object.entries(classData.methods ?? {})) {
-						if (word === "" || name.includes(word)) {
-							const item = build_item(name, body);
-							items.push(item);
-						}
-					}
-					break;
-				case "style":
-					// log.debug("style");
-					break;
 
-				default:
-					break;
+		function build_items(attribute: 'props' | 'slots' | 'events' | 'methods') {
+			for (const [name, body] of Object.entries(classData[attribute] ?? {})) {
+				if (body.internal) {
+					continue;
+				}
+				if (word === '' || name.includes(word)) {
+					const item = build_item(name, body);
+					items.push(item);
+				}
 			}
+		}
+
+		if (classData) {
+			// log.debug('using quasar metadata');
+			build_items(kind);
 		} else {
-			// log.debug("using full lists");
-			switch (result[1]) {
-				case "props":
-					items.push(...build_completions(quasarProps, word, wordRange));
-					break;
-				case "add_slot":
-					items.push(...build_completions(quasarSlots, word, wordRange));
-					break;
-				case "on":
-					items.push(...build_completions(quasarEvents, word, wordRange));
-					break;
-				case "run_method":
-					items.push(...build_completions(quasarMethods, word, wordRange));
-					break;
-				case "style":
-					// log.debug("style");
-					break;
-				default:
-					break;
-			}
+			// log.debug('using full lists');
+			items.push(...build_completions(quasarLists[kind], word, wordRange));
 		}
 
 		// log.debug("found ", items.length);

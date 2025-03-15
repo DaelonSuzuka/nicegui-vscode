@@ -8,20 +8,18 @@ src_path = quasar_path / "ui" / "src"
 asset_dir = root / "assets"
 
 
-def write_json(filename: str, obj):
+def write_json(filename: str, obj, sort_keys=False):
     if not filename.endswith(".json"):
         filename += ".json"
     with open(asset_dir / filename, "w") as f:
-        json.dump(obj, f, indent=4)
+        json.dump(obj, f, indent=4, sort_keys=sort_keys)
 
 
 components: dict[str, dict[str, dict]] = {}
 for file in src_path.rglob("*.json"):
-    with open(file) as f:
-        component = json.load(f)
-        components[file.relative_to(src_path).as_posix().removesuffix((".json"))] = (
-            component
-        )
+    with open(file, encoding='utf-8') as f:
+        name = file.relative_to(src_path).as_posix().removesuffix((".json"))
+        components[name] = json.load(f)
 
 # hydrate properties that "extends"
 
@@ -85,7 +83,11 @@ for component in components.values():
     for item in component.get("slots", []):
         slots.add(item)
 
-write_json("quasar_props", sorted(list(props)))
-write_json("quasar_events", sorted(list(events)))
-write_json("quasar_methods", sorted(list(methods)))
-write_json("quasar_slots", sorted(list(slots)))
+lists = {
+    "props": list(props),
+    "events": list(events),
+    "methods": list(methods),
+    "slots": list(slots),
+}
+
+write_json("quasar_lists", lists, sort_keys=True)
