@@ -106,7 +106,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		// log.debug("prefix", prefix);
 
 		// look backwards for ".<func>("
-		const result = prefix.match(/.(props|classes|style|on|run_method|add_slot)\s*\(\s*[\"'](?:(?:\b[\w-]+\b)?\s*?)+$/m);
+		const result = prefix.match(/\.(props|classes|style|on|run_method|add_slot)\s*\(\s*[\"'](?:(?:\b[\w/\[\]-]+\b)?\s*?)+$/m);
 
 		if (!result) {
 			return undefined;
