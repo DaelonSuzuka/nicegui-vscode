@@ -13,7 +13,7 @@
         "sourceMap": true,
         "rootDir": "src",
         "strict": false,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "skipLibCheck": true,
         "allowJs": true,
         "resolveJsonModule": true,
