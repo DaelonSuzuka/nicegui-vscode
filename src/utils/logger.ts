@@ -2,16 +2,16 @@ import { type LogOutputChannel, window } from "vscode";
 import { is_debug_mode } from ".";
 
 export enum LOG_LEVEL {
-	SILENT,
-	ERROR,
-	WARNING,
-	INFO,
-	DEBUG,
-	TRACE,
+	SILENT = 0,
+	ERROR = 1,
+	WARNING = 2,
+	INFO = 3,
+	DEBUG = 4,
+	TRACE = 5,
 }
 
 const LOG_LEVEL_NAMES = [
-	"SILENT",
+	"SILENT", //
 	"ERROR",
 	"WARN ",
 	"INFO ",
@@ -31,7 +31,7 @@ const LOG_COLORS = [
 ];
 
 export interface LoggerOptions {
-	level?: LOG_LEVEL
+	level?: LOG_LEVEL;
 	time?: boolean;
 	output?: string;
 }
@@ -122,7 +122,7 @@ export class Logger {
 
 const loggers: Map<string, Logger> = new Map();
 
-export function createLogger(tag, options?: LoggerOptions) {
+export function createLogger(tag: string, options?: LoggerOptions) {
 	const logger = new Logger(tag, options);
 	loggers.set(tag, logger);
 	return logger;
