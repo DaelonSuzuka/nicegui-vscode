@@ -17,7 +17,8 @@
         "skipLibCheck": true,
         "allowJs": true,
         "resolveJsonModule": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+		"strictBindCallApply": true
     },
     "exclude": [
         "node_modules",

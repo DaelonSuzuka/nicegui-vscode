@@ -1,11 +1,33 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
-    "files": {
-        "maxSize": 5000000
-    },
-    "formatter": {
-        "formatWithErrors": true,
-        "indentStyle": "tab",
-        "lineWidth": 120
-    }
+	"$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
+	"vcs": {
+		"defaultBranch": "master"
+	},
+	"files": {
+		"maxSize": 5000000,
+		"include": ["src/**/*.ts"],
+		"ignore": ["node_modules"]
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": true,
+		"indentStyle": "tab",
+		"lineWidth": 120,
+		"indentWidth": 4,
+		"lineEnding": "lf",
+		"include": ["src/**/*.ts"]
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	},
+	"linter": {
+		"rules": {
+			"style": {
+				"noUselessElse": "off",
+				"useImportType": "off"
+			}
+		}
+	}
 }

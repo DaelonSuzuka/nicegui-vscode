@@ -17,9 +17,15 @@
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
+			"skipFiles": [
+				"<node_internals>/**/*.js",
+                "${workspaceFolder}/node_modules/**/*.js",
+				"**/extensionHostProcess.js",
+				"**/.vscode/extensions/**"
+			],
 			"preLaunchTask": "npm: watch",
 			"env": {
-				"VSCODE_DEBUG_MODE": true
+				"VSCODE_DEBUG_MODE": "true"
 			}
 		},
 	]

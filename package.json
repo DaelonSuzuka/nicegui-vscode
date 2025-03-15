@@ -72,7 +72,7 @@
         ]
     },
     "devDependencies": {
-        "@biomejs/biome": "^1.8.3",
+        "@biomejs/biome": "^1.9.4",
         "@types/node": "^22.7.4",
         "@types/vscode": "^1.90.0",
         "@types/ws": "^8.5.12",

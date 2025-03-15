@@ -1,5 +1,5 @@
-import { type LogOutputChannel, window } from "vscode";
-import { is_debug_mode } from ".";
+import { type LogOutputChannel, window } from 'vscode';
+import { is_debug_mode } from '.';
 
 export enum LOG_LEVEL {
 	SILENT = 0,
@@ -11,23 +11,23 @@ export enum LOG_LEVEL {
 }
 
 const LOG_LEVEL_NAMES = [
-	"SILENT", //
-	"ERROR",
-	"WARN ",
-	"INFO ",
-	"DEBUG",
-	"TRACE",
+	'SILENT', //
+	'ERROR',
+	'WARN ',
+	'INFO ',
+	'DEBUG',
+	'TRACE',
 ];
 
-const RESET = "\u001b[0m";
+const RESET = '\u001b[0m';
 
 const LOG_COLORS = [
 	RESET, // SILENT, normal
-	"\u001b[1;31m", // ERROR, red
-	"\u001b[1;33m", // WARNING, yellow
-	"\u001b[1;36m", // INFO, cyan
-	"\u001b[1;32m", // DEBUG, green
-	"\u001b[1;35m", // TRACE, magenta
+	'\u001b[1;31m', // ERROR, red
+	'\u001b[1;33m', // WARNING, yellow
+	'\u001b[1;36m', // INFO, cyan
+	'\u001b[1;32m', // DEBUG, green
+	'\u001b[1;35m', // TRACE, magenta
 ];
 
 export interface LoggerOptions {
@@ -45,7 +45,7 @@ export class Logger {
 
 	constructor(
 		private tag: string,
-		{ level = LOG_LEVEL.DEBUG, time = false, output = "" }: LoggerOptions = {},
+		{ level = LOG_LEVEL.DEBUG, time = false, output = '' }: LoggerOptions = {},
 	) {
 		this.level = level;
 		this.show_time = time;
@@ -56,7 +56,7 @@ export class Logger {
 
 	private log(level: LOG_LEVEL, ...messages) {
 		if (is_debug_mode()) {
-			let prefix = "";
+			let prefix = '';
 			if (this.show_time) {
 				prefix += `[${new Date().toISOString()}]`;
 			}
