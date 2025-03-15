@@ -1,1 +1,2 @@
-export * from "./completions"
+export * from "./completions";
+export * from "./hover";

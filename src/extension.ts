@@ -1,11 +1,12 @@
 import type * as vscode from 'vscode';
-import { NiceGuiCompletionItemProvider } from './providers';
+import { NiceGuiCompletionItemProvider, NiceGuiHoverProvider } from './providers';
 import { createLogger, get_config } from './utils';
 
 const log = createLogger('ext');
 
 export function activate(context: vscode.ExtensionContext) {
 	new NiceGuiCompletionItemProvider(context);
+	new NiceGuiHoverProvider(context);
 
 	if (get_config().get('enableStringSuggestions')) {
 		enable_string_suggestions();
