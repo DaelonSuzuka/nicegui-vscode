@@ -1,0 +1,15 @@
+*
+*/**
+**/*.js.map
+!out/extension.js
+!syntaxes/*.tmLanguage.json
+!resources/
+!media/
+!configurations/
+!package.json
+!package.nls.json
+!README.md
+!icon.png
+!CHANGELOG.md
+!LICENSE
+!ThirdPartyNotices.txt
