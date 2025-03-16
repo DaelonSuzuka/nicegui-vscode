@@ -21,7 +21,7 @@ export class NiceGuiHoverProvider implements HoverProvider {
 	}
 
 	async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover> {
-		log.debug('provideHover');
+		// log.debug('provideHover');
 
 		const contents = new MarkdownString();
 
