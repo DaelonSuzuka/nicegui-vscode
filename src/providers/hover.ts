@@ -1,15 +1,16 @@
 import * as vscode from 'vscode';
 import {
-	Uri,
-	Position,
-	TextDocument,
 	CancellationToken,
 	ExtensionContext,
+	Hover,
 	HoverProvider,
 	MarkdownString,
-	Hover,
+	Position,
+	TextDocument,
+	Uri,
 } from 'vscode';
 import { createLogger } from '../utils';
+import { get_word_at_position, get_word_at_range } from './doc_utils';
 
 const log = createLogger('providers.hover');
 

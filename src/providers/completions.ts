@@ -1,18 +1,21 @@
-import * as vscode from 'vscode';
-import type {
-	Position,
-	TextDocument,
+import {
 	CancellationToken,
 	CompletionContext,
-	CompletionList,
+	CompletionItem,
 	CompletionItemLabel,
 	CompletionItemProvider,
+	CompletionList,
 	ExtensionContext,
+	MarkdownString,
+	Position,
 	Range,
+	SnippetString,
+	TextDocument,
 } from 'vscode';
-import { CompletionItem, MarkdownString, SnippetString } from 'vscode';
-import { type JSONObject, type JSONValue, quasarData, quasarLists, tailwindClasses } from './data';
+import * as vscode from 'vscode';
 import { createLogger } from '../utils';
+import { type JSONObject, type JSONValue, quasarData, quasarLists, tailwindClasses } from './data';
+import { get_word_at_position, get_word_at_range } from './doc_utils';
 
 const log = createLogger('completions');
 
@@ -37,23 +40,6 @@ function flatten(item: string | string[] | JSONValue, join: string): string {
 	if (Array.isArray(item)) {
 		return item.join(join);
 	}
-}
-
-function get_word_at_range(document: TextDocument, range: Range) {
-	let word = null;
-	if (range !== undefined) {
-		word = document.getText(range);
-		if (['""', "''"].includes(word)) {
-			word = '';
-		}
-	}
-	return word;
-}
-
-function get_word_at_position(document: TextDocument, position: Position, regex?: RegExp) {
-	const range = document.getWordRangeAtPosition(position, regex);
-	// log.debug("get_word_at_position", range, position, range.contains(position));
-	return get_word_at_range(document, range);
 }
 
 export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
