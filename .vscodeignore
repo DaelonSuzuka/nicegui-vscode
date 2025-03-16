@@ -3,6 +3,7 @@
 **/*.js.map
 !out/extension.js
 !syntaxes/*.tmLanguage.json
+!assets/*.json
 !resources/
 !media/
 !configurations/
