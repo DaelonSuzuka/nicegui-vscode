@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.7.0
+
+- Fix completions not triggering when . or / are in tailwind classes
+- Improve completion rules to support situations like `ui.row().classes(add='w-full  ', remove='w-', replace="w")`
+- Update quasar data
+
 ### 0.6.1
 
 - Fix suggestion setting being written to the wrong place
