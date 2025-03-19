@@ -17,11 +17,13 @@ with ui.row().classes(add='w-full  ', remove='w-', replace="w"):
     ui.button('2')
 
 ui.button().on('')
-ui.button().props('')
+ui.button().props('align')
 
-ui.card().props('')
+ui.card().props('bordered')
 ui.card().style('')
 
+ui.table().props('rows')
+ui.table().props('')
 ui.table().props('')
 ui.table().run_method('')
 ui.table().on('')

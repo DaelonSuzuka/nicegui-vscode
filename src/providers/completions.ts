@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import {
 	CancellationToken,
 	CompletionContext,
@@ -12,10 +13,10 @@ import {
 	SnippetString,
 	TextDocument,
 } from 'vscode';
-import * as vscode from 'vscode';
 import { createLogger } from '../utils';
-import { type JSONObject, type JSONValue, quasarData, quasarLists, tailwindClasses } from './data';
-import { get_word_at_position, get_word_at_range } from './doc_utils';
+import { type JSONObject, flatten, quasarData, quasarLists, tailwindClasses } from './data';
+import { capture_document_context } from './doc_utils';
+import { PylanceAdapter } from './pylance';
 
 const log = createLogger('completions');
 
@@ -33,57 +34,12 @@ function build_completions(list: string[], word: string, wordRange: Range) {
 	return items;
 }
 
-function flatten(item: string | string[] | JSONValue, join: string): string {
-	if (typeof item === 'string') {
-		return item;
-	}
-	if (Array.isArray(item)) {
-		return item.join(join);
-	}
-}
-
 export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
-	// biome-ignore lint/suspicious/noExplicitAny: <vscode API?>
-	pylance: vscode.Extension<any>;
+	pylance = new PylanceAdapter();
 
 	constructor(private context: ExtensionContext) {
 		const selector = [{ language: 'python', scheme: 'file' }];
-
-		this.pylance = vscode.extensions.getExtension('ms-python.vscode-pylance');
-
 		this.context.subscriptions.push(vscode.languages.registerCompletionItemProvider(selector, this));
-	}
-
-	async request_hover(document: TextDocument, position: Position): Promise<string | null> {
-		if (!this.pylance?.isActive) {
-			return null;
-		}
-		const client = await this.pylance.exports.client.getClient();
-
-		const response = await client._connection.sendRequest('textDocument/hover', {
-			textDocument: { uri: document.uri.toString() },
-			position: {
-				line: position.line,
-				character: position.character,
-			},
-		});
-		return response?.contents?.value ?? null;
-	}
-
-	async request_type(document: TextDocument, position: Position): Promise<string | null> {
-		if (!this.pylance?.isActive) {
-			return null;
-		}
-		const client = await this.pylance.exports.client.getClient();
-
-		const response = await client._connection.sendRequest('textDocument/typeDefinition', {
-			textDocument: { uri: document.uri.toString() },
-			position: {
-				line: position.line,
-				character: position.character,
-			},
-		});
-		return response?.contents?.value ?? null;
 	}
 
 	async provideCompletionItems(
@@ -92,112 +48,35 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		token: CancellationToken,
 		context: CompletionContext,
 	): Promise<CompletionItem[] | CompletionList<CompletionItem>> {
-		// log.debug('----------- provideCompletionItems -----------');
+		// log.debug('----- provideCompletionItems -----');
 
-		// get the entire text up until the cursor
-		//! performance implications?
-		const prefix = document.getText().slice(0, document.offsetAt(position));
-		// log.debug("prefix", prefix);
-
-		// look backwards for ".<func>("
-		const result = prefix.match(/\.\s*(props|classes|style|on|run_method|add_slot)\s*\(\s*[^\)]+$/);
-		// log.debug('result', result);
-
-		if (!result) {
+		// pylance will return null for hovers on string literals
+		if ((await this.pylance.request_hover(document, position)) !== null) {
 			return undefined;
 		}
 
-		// get the string literal from under the cursor
-		const surroundPattern = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
-		const surround = get_word_at_position(document, position, surroundPattern);
-		// log.debug(`surround ${surround}`);
+		const ctx = capture_document_context(document, position);
+		// log.debug('context:', ctx);
 
-		// get the word from under the cursor
-		const wordPattern = /[\.\w\/-]+|([\"'])\1/;
-		const wordRange = document.getWordRangeAtPosition(position, wordPattern);
-		const word = get_word_at_range(document, wordRange) ?? '';
-		// log.debug(`word ${word}`);
-
-		const map = {
-			classes: 'classes',
-			props: 'props',
-			add_slot: 'slots',
-			on: 'events',
-			run_method: 'methods',
-			style: 'style',
-		};
-
-		const kind = map[result[1]];
-		// log.debug('kind', kind);
+		if (!ctx.result) {
+			return undefined;
+		}
 
 		// ironically, "classes" doesn't rely on knowing the class
-		if (kind === 'classes') {
-			if (surround === null) {
+		if (ctx.kind === 'classes') {
+			if (ctx.surround === null) {
 				return undefined;
 			}
-			return build_completions(tailwindClasses, word, wordRange);
+			return build_completions(tailwindClasses, ctx.word, ctx.wordRange);
 		}
 
 		// style not supported yet
-		if (kind === 'style') {
+		if (ctx.kind === 'style') {
 			return undefined;
 		}
 
-		const offset = document.offsetAt(position) - result[0].length;
-
-		// define an internal function just for flow control
-		const determine_class = async () => {
-			if (['classes', 'props', 'style', 'events'].includes(kind)) {
-				const hoverPosition = document.positionAt(offset + 1);
-				const body = await this.request_hover(document, hoverPosition);
-				if (['classes', 'props', 'style'].includes(kind)) {
-					const match = body.match(
-						/\(property\) (?:classes|props|style): (?:Classes|Props|Style)\[(?:Self@)?([\w_]+)\]/,
-					);
-					if (match) {
-						return match[1];
-					}
-				} else if (['events'].includes(kind)) {
-					const match = body.match(/\(method\) def on\([^\)]*\) -> (\w+)/m);
-					if (match) {
-						return match[1];
-					}
-				}
-			} else {
-				// log.debug("other");
-
-				//TODO: fix this awful mess
-				const body1 = await this.request_hover(document, document.positionAt(offset - 1));
-				// log.debug("body1", body1);
-				if (body1) {
-					const match = body1.match(/\(variable\) [\w_]*: ([\w_]+)/);
-					// log.debug("match1", match);
-					if (match) {
-						return match[1];
-					}
-				}
-				const body2 = await this.request_hover(document, document.positionAt(offset - 3));
-				// log.debug("body2", body2);
-				if (body2) {
-					const match = body2.match(/class ([\w_]+)\(/);
-					// log.debug("match2", match);
-					if (match) {
-						return match[1];
-					}
-				}
-			}
-			return null;
-		};
-
-		let className = null;
-		const possibleClass = await determine_class();
-		if (possibleClass) {
-			// Convert NiceGUI types to Quasar types
-			className = `Q${possibleClass}`;
-			className = className.replace('Button', 'Btn');
-			className = className.replace('Image', 'Img');
-			className = className.toLowerCase();
-		}
+		const offset = document.offsetAt(position) - ctx.result[0].length;
+		const className = await this.pylance.determine_class(document, ctx.kind, offset);
 
 		function build_item(name: string, data: JSONObject) {
 			const label: CompletionItemLabel = {
@@ -247,8 +126,8 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			const doc = new MarkdownString();
 			doc.appendText(data.desc as string);
 			item.documentation = doc;
-			if (word !== '') {
-				item.range = wordRange;
+			if (ctx.word !== '') {
+				item.range = ctx.wordRange;
 			}
 			return item;
 		}
@@ -262,7 +141,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 				if (body.internal) {
 					continue;
 				}
-				if (word === '' || name.includes(word)) {
+				if (ctx.word === '' || name.includes(ctx.word)) {
 					const item = build_item(name, body);
 					items.push(item);
 				}
@@ -271,10 +150,10 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		if (classData) {
 			// log.debug('using quasar metadata');
-			build_items(kind);
+			build_items(ctx.kind);
 		} else {
 			// log.debug('using full lists');
-			items.push(...build_completions(quasarLists[kind], word, wordRange));
+			items.push(...build_completions(quasarLists[ctx.kind], ctx.word, ctx.wordRange));
 		}
 
 		// log.debug("found ", items.length);

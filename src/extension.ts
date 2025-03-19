@@ -6,7 +6,7 @@ const log = createLogger('ext');
 
 export function activate(context: vscode.ExtensionContext) {
 	new NiceGuiCompletionItemProvider(context);
-	// new NiceGuiHoverProvider(context);
+	new NiceGuiHoverProvider(context);
 
 	if (get_config().get('enableStringSuggestions')) {
 		enable_string_suggestions();
