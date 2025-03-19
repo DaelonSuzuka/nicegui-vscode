@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.8.0
+
+- Implement Quasar attribute hover provider
+
 ### 0.7.0
 
 - Fix completions not triggering when . or / are in tailwind classes
