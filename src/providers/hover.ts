@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import * as vscode from 'vscode';
 import {
 	CancellationToken,
@@ -25,6 +26,41 @@ export class NiceGuiHoverProvider implements HoverProvider {
 
 	async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover> {
 		// log.debug('----- provideHover -----');
+
+		// const location = {
+		// 	textDocument: { uri: document.uri.toString() },
+		// 	position: {
+		// 		line: position.line,
+		// 		character: position.character,
+		// 	},
+		// };
+
+		// const r = await this.pylance.send_request('textDocument/documentSymbol', location);
+		// log.debug('textDocument/documentSymbol:', r);
+
+		// const i = await this.pylance.send_request('textDocument/implementation', location);
+		// log.debug('textDocument/implementation:', i);
+
+		// const d = await this.pylance.send_request('textDocument/declaration', location);
+		// log.debug('textDocument/declaration:', d);
+
+		// const result = await this.pylance.request_type(document, position);
+		// log.debug('type:', result);
+
+		// if (result?.length > 0) {
+		// 	// log.debug(result[0]);
+		// 	const range = new vscode.Range(result[0].range.start, result[0].range.end);
+		// 	const uri = vscode.Uri.parse(result[0].uri);
+
+		// 	if (fs.existsSync(uri.fsPath)) {
+		// 		// log.debug('uri:', uri);
+		// 		const origin = await vscode.workspace.openTextDocument(uri);
+		// 		log.debug('origin:', origin);
+		// 		const definition = origin.lineAt(range.start.line);
+
+		// 		log.debug('definition:', definition.text);
+		// 	}
+		// }
 
 		const ctx = capture_document_context(document, position);
 		// log.debug('context:', ctx);
