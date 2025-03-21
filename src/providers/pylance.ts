@@ -1,22 +1,36 @@
 import * as vscode from 'vscode';
 import { Position, TextDocument } from 'vscode';
 
+export interface TextDocumentPositionParams {
+	textDocument: { uri: string };
+	position: Position;
+}
+
 export class PylanceAdapter {
 	pylance = vscode.extensions.getExtension('ms-python.vscode-pylance');
 
-	async request_hover(document: TextDocument, position: Position): Promise<string | null> {
+	async get_client() {
+		if (!this.pylance?.isActive) {
+			return null;
+		}
+		return await this.pylance.exports.client.getClient();
+	}
+
+	async send_request(method: string, params) {
 		if (!this.pylance?.isActive) {
 			return null;
 		}
 		const client = await this.pylance.exports.client.getClient();
 
-		const response = await client._connection.sendRequest('textDocument/hover', {
+		return await client._connection.sendRequest(method, params);
+	}
+
+	async request_hover(document: TextDocument, position: Position): Promise<string | null> {
+		const location: TextDocumentPositionParams = {
 			textDocument: { uri: document.uri.toString() },
-			position: {
-				line: position.line,
-				character: position.character,
-			},
-		});
+			position: position,
+		};
+		const response = await this.send_request('textDocument/hover', location);
 		return response?.contents?.value ?? null;
 	}
 
