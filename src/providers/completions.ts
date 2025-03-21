@@ -78,18 +78,18 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		const offset = document.offsetAt(position) - ctx.result[0].length;
 		const className = await this.pylance.determine_class(document, ctx.kind, offset);
 
-		function build_item(name: string, data: QuasarAttribute) {
+		function build_item(name: string, attr: QuasarAttribute) {
 			const label: CompletionItemLabel = {
 				label: name,
 				// detail: '',
 				// description: '',
 			};
-			label.description = flatten(data.type, ' | ');
+			label.description = flatten(attr.type, ' | ');
 
 			// log.debug(data.returns, data.params, data.returns !== undefined);
-			if (data.params !== undefined && data.returns !== undefined) {
+			if (attr.params !== undefined && attr.returns !== undefined) {
 				let params = 'void';
-				if (data.params !== null) {
+				if (attr.params !== null) {
 					// const _params: string[] = [];
 					// for (const [param, body] of Object.entries(data.params)) {
 					// 	const type = flatten(body.type, " | ");
@@ -98,24 +98,24 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 					// }
 
 					// params = _params.join(", ");
-					params = Object.keys(data.params).join(', ');
+					params = Object.keys(attr.params).join(', ');
 				}
 				let returns = 'void';
-				if (data.returns !== null) {
-					returns = Object.keys(data.returns).join(', ');
+				if (attr.returns !== null) {
+					returns = Object.keys(attr.returns).join(', ');
 				}
 				label.description = `(${params}) => ${returns}`;
-			} else if (data.params !== undefined) {
+			} else if (attr.params !== undefined) {
 				let params = 'void';
-				if (data.returns !== null) {
-					params = Object.keys(data.params).join(', ');
+				if (attr.returns !== null) {
+					params = Object.keys(attr.params).join(', ');
 				}
 				label.description = `(${params})`;
 			}
 
 			const item = new CompletionItem(label);
 
-			if (name.includes('[')) {
+			if (ctx.kind === 'slots' && name.includes('[')) {
 				const insert = new SnippetString();
 				const parts = name.split('[');
 				insert.appendText(parts[0]);
@@ -123,8 +123,14 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 				item.insertText = insert;
 			}
 
+			if (ctx.kind === 'props' && attr.type !== 'Boolean') {
+				const insert = new SnippetString();
+				insert.appendText(`${name}=`);
+				item.insertText = insert;
+			}
+
 			const doc = new MarkdownString();
-			doc.appendText(data.desc as string);
+			doc.appendText(attr.desc as string);
 			item.documentation = doc;
 			if (ctx.word !== '') {
 				item.range = ctx.wordRange;
@@ -136,13 +142,22 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		const classData = quasarData[className];
 
-		function build_items(attribute: 'props' | 'slots' | 'events' | 'methods') {
-			for (const [name, body] of Object.entries(classData[attribute] ?? {})) {
-				if (body.internal) {
+		function build_items(kind: 'props' | 'slots' | 'events' | 'methods') {
+			if (ctx.word.endsWith('=')) {
+				const word = ctx.word.slice(0, -1);
+				const attr = classData[kind][word];
+				for (const value of attr.values ?? []) {
+					const item = new CompletionItem(value.slice(1, -1));
+					items.push(item);
+				}
+				return;
+			}
+			for (const [name, attr] of Object.entries(classData[kind] ?? {})) {
+				if (attr.internal) {
 					continue;
 				}
 				if (ctx.word === '' || name.includes(ctx.word)) {
-					const item = build_item(name, body);
+					const item = build_item(name, attr);
 					items.push(item);
 				}
 			}

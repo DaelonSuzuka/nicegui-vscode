@@ -16,8 +16,12 @@ with ui.row().classes(add='w-full  ', remove='w-', replace="w"):
     ui.button('1')
     ui.button('2')
 
+ui.button(icon='')
+ui.button().props('icon=')
+ui.button().props('')
+
 ui.button().on('')
-ui.button().props('align')
+ui.button().props('align=left')
 
 ui.card().props('bordered')
 ui.card().style('')

@@ -35,6 +35,15 @@ export interface DocumentContext {
 	className?: string;
 }
 
+const kinds = {
+	classes: 'classes',
+	props: 'props',
+	add_slot: 'slots',
+	on: 'events',
+	run_method: 'methods',
+	style: 'style',
+};
+
 export function capture_document_context(document: TextDocument, position: Position) {
 	const prefix = document.getText().slice(0, document.offsetAt(position));
 	const result = prefix.match(/\.\s*(props|classes|style|on|run_method|add_slot)\s*\(\s*[^\)]+$/);
@@ -47,20 +56,11 @@ export function capture_document_context(document: TextDocument, position: Posit
 	const surroundRange = document.getWordRangeAtPosition(position, surroundPattern);
 	const surround = get_word_at_position(document, position, surroundPattern);
 
-	const wordPattern = /[\.\w\/-]+|([\"'])\1/;
+	const wordPattern = /[\.\w\/-]+\=?|([\"'])\1/;
 	const wordRange = document.getWordRangeAtPosition(position, wordPattern);
 	const word = get_word_at_range(document, wordRange) ?? '';
 
-	const map = {
-		classes: 'classes',
-		props: 'props',
-		add_slot: 'slots',
-		on: 'events',
-		run_method: 'methods',
-		style: 'style',
-	};
-
-	const kind = map[result[1]];
+	const kind = kinds[result[1]];
 
 	const context: DocumentContext = {
 		document: document,
