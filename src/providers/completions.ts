@@ -14,7 +14,7 @@ import {
 	TextDocument,
 } from 'vscode';
 import { createLogger } from '../utils';
-import { type JSONObject, flatten, quasarData, quasarLists, tailwindClasses } from './data';
+import { QuasarAttribute, flatten, quasarData, quasarLists, tailwindClasses } from './data';
 import { capture_document_context } from './doc_utils';
 import { PylanceAdapter } from './pylance';
 
@@ -78,7 +78,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		const offset = document.offsetAt(position) - ctx.result[0].length;
 		const className = await this.pylance.determine_class(document, ctx.kind, offset);
 
-		function build_item(name: string, data: JSONObject) {
+		function build_item(name: string, data: QuasarAttribute) {
 			const label: CompletionItemLabel = {
 				label: name,
 				// detail: '',
