@@ -1,6 +1,12 @@
 # Changelog
 
+### 0.9.1
+
+- Remove leftover debugging code
+- 
+  
 ### 0.9.0
+
 - Improved completions for Quasar attributes with examples/fixed values
 - Implemented completions for icons
 

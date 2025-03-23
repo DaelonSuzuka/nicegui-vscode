@@ -6,7 +6,9 @@ A Visual Studio Code extension with rich support for the [NiceGUI](https://niceg
 - syntax highlighting for embedded HTML/CSS strings
 - completions for Tailwind/CSS in `.classes()` method
 - completions for Quasar props, events, methods, and slots
-  
+- hovers for Quasar attributes
+- completions for icons
+
 ### Todo
 - completions for style attributes
 - NiceGUI snippets
@@ -16,6 +18,10 @@ A Visual Studio Code extension with rich support for the [NiceGUI](https://niceg
 Tailwind Completions in `.classes()` method
 
 ![alt text](img/tailwind_completions.gif)
+
+Icon completions + hovers
+
+![alt text](img/icons.gif)
 
 Quasar Completions
 
