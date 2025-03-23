@@ -26,13 +26,13 @@ async function run() {
 	}
 	// console.log(modules);
 
-	const iconNames: string[] = [];
+	const iconNames = new Set<string>();
 
 	for (const mod of modules) {
 		for (const [key, value] of Object.entries(mod.default)) {
 			if (value && typeof value === 'object') {
 				for (const name of Object.values(value)) {
-					iconNames.push(name);
+					iconNames.add(name);
 				}
 			}
 		}
@@ -40,7 +40,10 @@ async function run() {
 	// console.log(iconNames);
 
 	process.chdir(original_cwd);
-	fs.writeFileSync('./assets/default_icons.json', JSON.stringify(iconNames, null, 4));
+
+	const sortedNames = Array.from(iconNames).sort();
+	const output = JSON.stringify(sortedNames, null, 4);
+	fs.writeFileSync('./assets/default_icons.json', output);
 }
 
 run();
