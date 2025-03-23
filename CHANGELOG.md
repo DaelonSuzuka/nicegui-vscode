@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9.0
+- Improved completions for Quasar attributes with examples/fixed values
+- Implemented completions for icons
+
 ### 0.8.0
 
 - Implement Quasar attribute hover provider
