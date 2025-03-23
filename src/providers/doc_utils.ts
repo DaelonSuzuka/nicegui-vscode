@@ -20,7 +20,7 @@ export function get_word_at_position(document: TextDocument, position: Position,
 	return get_word_at_range(document, range);
 }
 
-export type ContextMethod = 'classes' | 'props' | 'slots' | 'events' | 'methods' | 'style';
+export type ContextMethod = 'classes' | 'props' | 'slots' | 'events' | 'methods' | 'style' | 'icons';
 
 export interface DocumentContext {
 	document: TextDocument;
@@ -49,24 +49,27 @@ export function capture_document_context(document: TextDocument, position: Posit
 	const result = prefix.match(/\.\s*(props|classes|style|on|run_method|add_slot)\s*\(\s*[^\)]+$/);
 
 	if (!result) {
-		return undefined;
+		const icon = prefix.match(/(icon)=['"]\w*$/);
+		if (!icon) {
+			return undefined;
+		}
 	}
 
 	const surroundPattern = /(?<=(["']))(?:(?=(\\?))\2.)*?(?=\1)/;
 	const surroundRange = document.getWordRangeAtPosition(position, surroundPattern);
 	const surround = get_word_at_position(document, position, surroundPattern);
 
-	const wordPattern = /[\.\w\/-]+\=?|([\"'])\1/;
+	const wordPattern = /[\.\w\/-=]+|([\"'])\1/;
 	const wordRange = document.getWordRangeAtPosition(position, wordPattern);
 	const word = get_word_at_range(document, wordRange) ?? '';
 
-	const kind = kinds[result[1]];
+	const kind = kinds[result?.[1]] ?? 'icons';
 
 	const context: DocumentContext = {
 		document: document,
 		position: position,
 		result: result,
-		method: result[1],
+		method: result?.[1],
 		surroundRange: surroundRange,
 		surround: surround,
 		wordRange: wordRange,

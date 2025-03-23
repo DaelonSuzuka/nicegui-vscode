@@ -14,7 +14,7 @@ import {
 	TextDocument,
 } from 'vscode';
 import { createLogger } from '../utils';
-import { QuasarAttribute, flatten, quasarData, quasarLists, tailwindClasses } from './data';
+import { QuasarAttribute, flatten, quasarData, quasarLists, tailwindClasses, defaultIcons } from './data';
 import { capture_document_context } from './doc_utils';
 import { PylanceAdapter } from './pylance';
 
@@ -58,8 +58,18 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		const ctx = capture_document_context(document, position);
 		// log.debug('context:', ctx);
 
-		if (!ctx.result) {
+		if (!ctx) {
 			return undefined;
+		}
+
+		if (ctx.kind === 'icons') {
+			log.debug('building icons');
+			const items = [];
+			for (const icon of defaultIcons) {
+				const item = new CompletionItem(icon);
+				items.push(item);
+			}
+			return items;
 		}
 
 		// ironically, "classes" doesn't rely on knowing the class
@@ -126,6 +136,9 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			if (ctx.kind === 'props' && attr.type !== 'Boolean') {
 				const insert = new SnippetString();
 				insert.appendText(`${name}=`);
+				if (attr.values) {
+					insert.appendChoice(attr.values.map((v) => v.slice(1, -1)));
+				}
 				item.insertText = insert;
 			}
 
@@ -143,8 +156,20 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		const classData = quasarData[className];
 
 		function build_items(kind: 'props' | 'slots' | 'events' | 'methods') {
-			if (ctx.word.endsWith('=')) {
-				const word = ctx.word.slice(0, -1);
+			if (ctx.word.includes('=')) {
+				const word = ctx.word.split('=')[0];
+				if (['icon', 'icon-right'].includes(word)) {
+					for (const icon of defaultIcons) {
+						const item = new CompletionItem(icon);
+						const content = new MarkdownString();
+						content.appendMarkdown(
+							'<svg>M0 0h24v24H0zm0 0h24v24H0zm0 0h24v24H0z@@fill:none;&&M20 0H4v2h16V0zM4 24h16v-2H4v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9 10.76 6.75 12 6.75zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z</svg>',
+						);
+						item.documentation = content;
+						items.push(item);
+					}
+					return;
+				}
 				const attr = classData[kind][word];
 				for (const value of attr.values ?? []) {
 					const item = new CompletionItem(value.slice(1, -1));

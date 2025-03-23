@@ -1,4 +1,3 @@
-import * as fs from 'node:fs';
 import * as vscode from 'vscode';
 import {
 	CancellationToken,
@@ -65,7 +64,7 @@ export class NiceGuiHoverProvider implements HoverProvider {
 		const ctx = capture_document_context(document, position);
 		// log.debug('context:', ctx);
 
-		if (!ctx.result) {
+		if (!ctx) {
 			return undefined;
 		}
 
@@ -86,13 +85,14 @@ export class NiceGuiHoverProvider implements HoverProvider {
 		// log.debug(classData[ctx.kind][ctx.word]);
 		// log.debug(classData[ctx.kind][ctx.word].desc)
 
-		const data = classData?.[ctx.kind]?.[ctx.word];
+		const word = ctx.word.split('=')[0];
+		const data = classData?.[ctx.kind]?.[word];
 		// log.debug('data:', data);
 
 		if (data) {
 			const contents = new MarkdownString();
 
-			contents.appendText(`${ctx.word}: ${flatten(data.type, ' | ')}`);
+			contents.appendText(`${word}: ${flatten(data.type, ' | ')}`);
 			contents.appendMarkdown('\n\n---\n\n');
 			contents.appendText(data.desc);
 			if (data.examples) {
