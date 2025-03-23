@@ -143,7 +143,24 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			}
 
 			const doc = new MarkdownString();
-			doc.appendText(attr.desc as string);
+			doc.appendText(attr.desc);
+			if (attr.examples) {
+				let mk = '\n\n---\n\n';
+				mk += 'Examples:\n';
+				for (const ex of attr.examples) {
+					mk += ` - ${ex.replace('#', '\\#')}\n`;
+				}
+				doc.appendMarkdown(mk);
+			}
+			if (attr.values) {
+				let mk = '\n\n---\n\n';
+				mk += 'Values:\n\n';
+				for (const val of attr.values) {
+					mk += ` - ${val.replace('#', '\\#')}\n`;
+				}
+				mk += '\n';
+				doc.appendMarkdown(mk);
+			}
 			item.documentation = doc;
 			if (ctx.word !== '') {
 				item.range = ctx.wordRange;
