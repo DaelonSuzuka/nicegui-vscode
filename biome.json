@@ -5,7 +5,7 @@
 	},
 	"files": {
 		"maxSize": 5000000,
-		"include": ["src/**/*.ts", "tools/**/*.ts"],
+		"include": ["src/**/*.ts", "tools/**/*.ts", "**/*.json"],
 		"ignore": ["node_modules"]
 	},
 	"formatter": {
@@ -15,7 +15,7 @@
 		"lineWidth": 120,
 		"indentWidth": 4,
 		"lineEnding": "lf",
-		"include": ["src/**/*.ts", "tools/**/*.ts"]
+		"include": ["src/**/*.ts", "tools/**/*.ts", "**/*.json"]
 	},
 	"javascript": {
 		"formatter": {
