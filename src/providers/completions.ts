@@ -63,7 +63,6 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 		}
 
 		if (ctx.kind === 'icons') {
-			log.debug('building icons');
 			const items = [];
 			for (const icon of defaultIcons) {
 				const item = new CompletionItem(icon);
