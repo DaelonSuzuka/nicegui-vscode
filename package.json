@@ -1,87 +1,93 @@
 {
-    "name": "nicegui",
-    "displayName": "NiceGUI",
-    "icon": "icon.png",
-    "version": "0.9.1",
-    "description": "Language support for the NiceGUI framework",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/daelonsuzuka/nicegui-vscode"
-    },
-    "bugs": {
-        "url": "https://github.com/daelonsuzuka/nicegui-vscode/issues"
-    },
-    "license": "MIT",
-    "author": "DaelonSuzuka",
-    "publisher": "DaelonSuzuka",
-    "engines": {
-        "vscode": "^1.90.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets",
-        "Other"
-    ],
-    "activationEvents": [
-        "onLanguage:python"
-    ],
-    "scripts": {
-        "compile": "tsc -p ./",
-        "lint": "eslint ./src --quiet",
-        "watch": "tsc -watch -p ./",
-        "package": "vsce package",
-        "vscode:prepublish": "npm run esbuild-base -- --minify",
-        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-        "esbuild": "npm run esbuild-base -- --sourcemap",
-        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-        "gather-icons": "ts-node tools/gather_icons.ts",
-        "test": "vscode-test"
-    },
-    "main": "./out/extension.js",
-    "contributes": {
-        "grammars": [
-            {
-                "injectTo": [
-                    "source.python"
-                ],
-                "scopeName": "source.nicegui.injections",
-                "path": "./syntaxes/nicegui.tmLanguage.json",
-                "embeddedLanguages": {
-                    "meta.embedded.inline.html": "html",
-                    "meta.embedded.inline.css": "css",
-                    "meta.embedded.inline.scss": "scss",
-                    "meta.embedded.inline.sass": "sass"
-                }
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "NiceGUI",
-            "properties": {
-                "nicegui.enableStringSuggestions": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether to automatically 'Quick Suggestions' in strings."
-                }
-            }
-        },
-        "snippets": [
-            {
-                "language": "python",
-                "path": "./configurations/snippets.json"
-            }
-        ]
-    },
-    "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "@types/node": "^22.7.4",
-        "@types/vscode": "^1.90.0",
-        "@types/ws": "^8.5.12",
-        "@vscode/vsce": "^3.1.1",
-        "esbuild": "^0.24.0",
-        "glob": "^11.0.1",
-        "ts-node": "^10.9.2",
-        "tslint": "^6.1.3",
-        "typescript": "^5.6.2"
-    }
+	"name": "nicegui",
+	"displayName": "NiceGUI",
+	"icon": "icon.png",
+	"version": "0.9.1",
+	"description": "Language support for the NiceGUI framework",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/daelonsuzuka/nicegui-vscode"
+	},
+	"bugs": {
+		"url": "https://github.com/daelonsuzuka/nicegui-vscode/issues"
+	},
+	"license": "MIT",
+	"author": "DaelonSuzuka",
+	"publisher": "DaelonSuzuka",
+	"engines": {
+		"vscode": "^1.90.0"
+	},
+	"categories": ["Programming Languages", "Snippets", "Other"],
+	"activationEvents": ["onLanguage:python"],
+	"scripts": {
+		"compile": "tsc -p ./",
+		"lint": "eslint ./src --quiet",
+		"watch": "tsc -watch -p ./",
+		"package": "vsce package",
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"gather-icons": "ts-node tools/gather_icons.ts",
+		"test": "vscode-test"
+	},
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"category": "NiceGUI",
+				"command": "nicegui.switchScriptComponent",
+				"title": "Switch Script/Component"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "nicegui.switchScriptComponent",
+				"key": "alt+o",
+				"when": "editorLangId in nicegui.context.niceguiComponentFiles && editorTextFocus"
+			}
+		],
+		"grammars": [
+			{
+				"injectTo": ["source.python"],
+				"scopeName": "source.nicegui.injections",
+				"path": "./syntaxes/nicegui.tmLanguage.json",
+				"embeddedLanguages": {
+					"meta.embedded.inline.html": "html",
+					"meta.embedded.inline.css": "css",
+					"meta.embedded.inline.scss": "scss",
+					"meta.embedded.inline.sass": "sass"
+				}
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "NiceGUI",
+			"properties": {
+				"nicegui.enableStringSuggestions": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether to automatically 'Quick Suggestions' in strings."
+				}
+			}
+		},
+		"snippets": [
+			{
+				"language": "python",
+				"path": "./configurations/snippets.json"
+			}
+		]
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/node": "^22.7.4",
+		"@types/vscode": "^1.90.0",
+		"@types/ws": "^8.5.12",
+		"@vscode/vsce": "^3.1.1",
+		"esbuild": "^0.24.0",
+		"glob": "^11.0.1",
+		"ts-node": "^10.9.2",
+		"tslint": "^6.1.3",
+		"typescript": "^5.6.2"
+	}
 }
