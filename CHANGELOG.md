@@ -1,9 +1,12 @@
 # Changelog
 
+### 0.9.2
+
+- Add alt+o shortcut to jump from a .py file to a matching .vue file
+
 ### 0.9.1
 
 - Remove leftover debugging code
-- 
   
 ### 0.9.0
 
