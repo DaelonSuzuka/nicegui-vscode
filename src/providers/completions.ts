@@ -14,7 +14,7 @@ import {
 	TextDocument,
 } from 'vscode';
 import { createLogger } from '../utils';
-import { QuasarAttribute, flatten, quasarData, quasarLists, tailwindClasses, defaultIcons } from './data';
+import { QuasarAttribute, flatten, quasarData, quasarLists, tailwindClasses, materialIcons } from './data';
 import { capture_document_context } from './doc_utils';
 import { PylanceAdapter } from './pylance';
 
@@ -64,7 +64,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 
 		if (ctx.kind === 'icons') {
 			const items = [];
-			for (const icon of defaultIcons) {
+			for (const icon of materialIcons) {
 				const item = new CompletionItem(icon);
 				items.push(item);
 			}
@@ -175,7 +175,7 @@ export class NiceGuiCompletionItemProvider implements CompletionItemProvider {
 			if (ctx.word.includes('=')) {
 				const word = ctx.word.split('=')[0];
 				if (['icon', 'icon-right'].includes(word)) {
-					for (const icon of defaultIcons) {
+					for (const icon of materialIcons) {
 						const item = new CompletionItem(icon);
 						items.push(item);
 					}

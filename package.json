@@ -2,7 +2,7 @@
 	"name": "nicegui",
 	"displayName": "NiceGUI",
 	"icon": "icon.png",
-	"version": "0.9.2",
+	"version": "0.9.3",
 	"description": "Language support for the NiceGUI framework",
 	"repository": {
 		"type": "git",
@@ -28,7 +28,6 @@
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-		"gather-icons": "ts-node tools/gather_icons.ts",
 		"test": "vscode-test"
 	},
 	"main": "./out/extension.js",

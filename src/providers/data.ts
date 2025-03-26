@@ -68,4 +68,4 @@ export interface QuasarGenericLists {
 export const quasarLists: QuasarGenericLists = load('quasar_lists.json');
 export const tailwindClasses: string[] = load('tailwind_classes.json');
 
-export const defaultIcons: string[] = load('default_icons.json')
+export const materialIcons: string[] = load('material_icons.json')

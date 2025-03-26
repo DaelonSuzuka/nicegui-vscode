@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9.3
+
+- Improve icon list for completions
+
 ### 0.9.2
 
 - Add alt+o shortcut to jump from a .py file to a matching .vue file
