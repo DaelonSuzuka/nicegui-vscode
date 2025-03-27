@@ -22,8 +22,8 @@ for file in quasar_path.rglob("material*/icons.json"):
                 
             name = name.removeprefix("mat_")
             name = re.sub("^round_", "r_", name)
-            name = re.sub("^sharp_", "r_", name)
-            name = re.sub("^outlined_", "r_", name)
+            name = re.sub("^sharp_", "s_", name)
+            name = re.sub("^outlined_", "o_", name)
             name = re.sub("^sym_outlined_", "sym_o_", name)
             name = re.sub("^sym_rounded_", "sym_r_", name)
             name = re.sub("^sym_sharp_", "sym_s_", name)
