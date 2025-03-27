@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9.5
+
+- Replace icon list generator with new one provided by @evnchn (thanks!)
+
 ### 0.9.4
 
 - Fix typo in icon generation script
