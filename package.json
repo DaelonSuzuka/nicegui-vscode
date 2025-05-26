@@ -32,7 +32,28 @@
 	},
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "NiceGUI",
+			"properties": {
+				"nicegui.enableStringSuggestions": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether to automatically 'Quick Suggestions' in strings."
+				},
+				"nicegui.preview.url": {
+					"type": "string",
+					"default": "http://localhost:8080",
+					"description": "The target URL for the NiceGUI preview"
+				}
+			}
+		},
 		"commands": [
+			{
+				"category": "NiceGUI",
+				"command": "nicegui.openPreview",
+				"title": "Open NiceGUI Preview"
+			},
 			{
 				"category": "NiceGUI",
 				"command": "nicegui.switchScriptComponent",
@@ -59,17 +80,6 @@
 				}
 			}
 		],
-		"configuration": {
-			"type": "object",
-			"title": "NiceGUI",
-			"properties": {
-				"nicegui.enableStringSuggestions": {
-					"type": "boolean",
-					"default": true,
-					"description": "Whether to automatically 'Quick Suggestions' in strings."
-				}
-			}
-		},
 		"snippets": [
 			{
 				"language": "python",

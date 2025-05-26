@@ -8,7 +8,10 @@ export function activate(context: vscode.ExtensionContext) {
 	new NiceGuiCompletionItemProvider(context);
 	new NiceGuiHoverProvider(context);
 
-	context.subscriptions.push(register_command('switchScriptComponent', switch_script_component));
+	context.subscriptions.push(
+        register_command('switchScriptComponent', switch_script_component),
+        register_command('openPreview', open_nicegui_preview),
+    );
 
 	set_context('niceguiComponentFiles', ['python', 'vue', 'javascript']);
 
@@ -47,4 +50,27 @@ async function switch_script_component() {
 	if (file) {
 		vscode.window.showTextDocument(file);
 	}
+}
+
+async function open_nicegui_preview() {
+	const panel = vscode.window.createWebviewPanel('nicegui', 'NiceGUI', vscode.ViewColumn.One);
+	panel.webview.options = { enableScripts: true };
+
+	const url = get_config().get('preview.url');
+
+	const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NiceGUI</title>
+</head>
+<body>
+    <object data="${url}" style="width:100%;height:100vh;">
+        <embed src="${url}" style="width:100%;height:100vh;"> </embed>
+        Error: Embedded data could not be displayed.
+    </object>
+</body>
+</html>`;
+	panel.webview.html = html;
 }
