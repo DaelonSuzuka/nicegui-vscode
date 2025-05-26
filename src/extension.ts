@@ -9,9 +9,9 @@ export function activate(context: vscode.ExtensionContext) {
 	new NiceGuiHoverProvider(context);
 
 	context.subscriptions.push(
-        register_command('switchScriptComponent', switch_script_component),
-        register_command('openPreview', open_nicegui_preview),
-    );
+		register_command('switchScriptComponent', switch_script_component),
+		register_command('openPreview', open_nicegui_preview),
+	);
 
 	set_context('niceguiComponentFiles', ['python', 'vue', 'javascript']);
 
@@ -53,8 +53,11 @@ async function switch_script_component() {
 }
 
 async function open_nicegui_preview() {
-	const panel = vscode.window.createWebviewPanel('nicegui', 'NiceGUI', vscode.ViewColumn.One);
-	panel.webview.options = { enableScripts: true };
+	const options = {
+		enableScripts: true,
+		retainContextWhenHidden: true,
+	};
+	const panel = vscode.window.createWebviewPanel('nicegui', 'NiceGUI', vscode.ViewColumn.Active, options);
 
 	const url = get_config().get('preview.url');
 
