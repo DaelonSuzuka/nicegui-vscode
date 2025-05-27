@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 export * from './logger';
 
+export const EXTENSION_AUTHOR = 'DaelonSuzuka';
 export const EXTENSION_PREFIX = 'nicegui';
 
 export function get_config(section = EXTENSION_PREFIX, scope?: vscode.ConfigurationScope | null) {
@@ -22,6 +23,10 @@ export function set_context(name: string, value: any) {
 
 export function register_command(command: string, callback: (...args: any[]) => any, thisArg?: any) {
 	return vscode.commands.registerCommand(`${EXTENSION_PREFIX}.${command}`, callback, thisArg);
+}
+
+export function get_extension_uri(...paths: string[]) {
+	return vscode.Uri.joinPath(vscode.extensions.getExtension(`${EXTENSION_AUTHOR}.${EXTENSION_PREFIX}`).extensionUri, ...(paths ?? ''));
 }
 
 export async function find_file(file: string): Promise<vscode.Uri | null> {
