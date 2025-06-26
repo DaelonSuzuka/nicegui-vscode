@@ -1,6 +1,6 @@
 {
     "scopeName": "source.nicegui.injections",
-    "injectionSelector": "L:source.python",
+    "injectionSelector": "L:source.python -comment -string",
     "patterns": [
         {
             "name": "meta.function-call.python",
