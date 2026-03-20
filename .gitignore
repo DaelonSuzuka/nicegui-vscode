@@ -9,3 +9,4 @@ configurations/test.py
 .vscode-test
 
 .venv
+lode/tmp
