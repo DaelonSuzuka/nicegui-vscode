@@ -1,11 +1,34 @@
 from pathlib import Path
 import json
+import os
 
 root = Path(__file__).parent.parent
 
-quasar_path = root.parent / "quasar"
-src_path = quasar_path / "ui" / "src"
 asset_dir = root / "assets"
+
+
+def resolve_source_path() -> Path:
+    env = os.environ.get("QUASAR_API_DIR")
+    if env:
+        path = Path(env)
+        if path.exists():
+            return path
+
+    candidates = [
+        root.parent / "quasar" / "ui" / "src",         # legacy local quasar repo
+        root / "node_modules" / "quasar" / "dist" / "api",  # npm package API files
+    ]
+    for path in candidates:
+        if path.exists():
+            return path
+
+    raise FileNotFoundError(
+        "Could not find Quasar API source. "
+        "Set QUASAR_API_DIR or install quasar npm package."
+    )
+
+
+src_path = resolve_source_path()
 
 
 def write_json(filename: str, obj, sort_keys=False):
@@ -18,33 +41,40 @@ def write_json(filename: str, obj, sort_keys=False):
 components: dict[str, dict[str, dict]] = {}
 for file in src_path.rglob("*.json"):
     with open(file, encoding='utf-8') as f:
-        name = file.relative_to(src_path).as_posix().removesuffix((".json"))
+        if src_path.name == "api":
+            # npm package format: dist/api/QBtn.json
+            name = file.stem
+        else:
+            # quasar source format: ui/src/components/QBtn.json
+            name = file.relative_to(src_path).as_posix().removesuffix((".json"))
         components[name] = json.load(f)
 
 # hydrate properties that "extends"
+extends: dict[str, dict[str, dict]] = components.get("api.extends", {})
 
-extends: dict[str, dict[str, dict]] = components["api.extends"]
+if extends:
+    for component in components.values():
 
-for component in components.values():
+        def do_ext(kind):
+            for name, body in component.get(kind, {}).items():
+                ext = body.get("extends", None)
+                source = extends.get(kind, {}).get(ext, {})
+                for key, value in source.items():
+                    if key not in component[kind][name]:
+                        component[kind][name][key] = value
 
-    def do_ext(kind):
-        for name, body in component.get(kind, {}).items():
-            ext = body.get("extends", None)
-            source = extends[kind].get(ext, {})
-            for key, value in source.items():
-                if key not in component[kind][name]:
-                    component[kind][name][key] = value
-
-    do_ext("props")
-    do_ext("events")
-    do_ext("methods")
-    do_ext("slots")
+        do_ext("props")
+        do_ext("events")
+        do_ext("methods")
+        do_ext("slots")
 
 
 # hydrate mixins
 for component in components.values():
     for mixin_name in component.get("mixins", []):
-        mixin = components[mixin_name]
+        mixin = components.get(mixin_name)
+        if not mixin:
+            continue
 
         def apply(kind):
             if kind not in component:

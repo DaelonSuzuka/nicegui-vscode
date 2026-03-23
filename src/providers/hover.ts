@@ -23,8 +23,12 @@ export class NiceGuiHoverProvider implements HoverProvider {
 		context.subscriptions.push(vscode.languages.registerHoverProvider(selector, this));
 	}
 
-	async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover> {
-		// log.debug('----- provideHover -----');
+	async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
+		try {
+			// log.debug('----- provideHover -----');
+			if (token.isCancellationRequested) {
+				return undefined;
+			}
 
 		// const location = {
 		// 	textDocument: { uri: document.uri.toString() },
@@ -61,72 +65,82 @@ export class NiceGuiHoverProvider implements HoverProvider {
 		// 	}
 		// }
 
-		const ctx = capture_document_context(document, position);
-		// log.debug('context:', ctx);
+			const ctx = capture_document_context(document, position);
+			// log.debug('context:', ctx);
 
-		if (!ctx) {
-			return undefined;
-		}
+			if (!ctx) {
+				return undefined;
+			}
 
-		// tailwind classes not supported yet
-		if (ctx.kind === 'classes') {
-			return undefined;
-		}
+			// tailwind classes not supported yet
+			if (ctx.kind === 'classes') {
+				return undefined;
+			}
 
-		// style not supported yet
-		if (ctx.kind === 'style') {
-			return undefined;
-		}
-		const offset = document.offsetAt(position) - ctx.result[0].length;
-		const className = await this.pylance.determine_class(document, ctx.kind, offset);
-		const classData = quasarData[className];
+			// style not supported yet
+			if (ctx.kind === 'style' || ctx.kind === 'icons') {
+				return undefined;
+			}
+			if (!ctx.result || token.isCancellationRequested) {
+				return undefined;
+			}
+			const offset = document.offsetAt(position) - ctx.result[0].length;
+			const className = await this.pylance.determine_class(document, ctx.kind, offset);
+			if (token.isCancellationRequested) {
+				return undefined;
+			}
+			const classData = quasarData[className];
 
-		// log.debug(classData[ctx.kind])
-		// log.debug(classData[ctx.kind][ctx.word]);
-		// log.debug(classData[ctx.kind][ctx.word].desc)
+			// log.debug(classData[ctx.kind])
+			// log.debug(classData[ctx.kind][ctx.word]);
+			// log.debug(classData[ctx.kind][ctx.word].desc)
 
-		const word = ctx.word.split('=')[0];
-		const data = classData?.[ctx.kind]?.[word];
-		// log.debug('data:', data);
+			const word = ctx.word.split('=')[0];
+			const data = classData?.[ctx.kind]?.[word];
+			// log.debug('data:', data);
 
-		if (data) {
-			const contents = new MarkdownString();
+			if (data) {
+				const contents = new MarkdownString();
 
-			contents.appendText(`${word}: ${flatten(data.type, ' | ')}`);
-			contents.appendMarkdown('\n\n---\n\n');
-			contents.appendText(data.desc);
-			if (data.examples) {
-				let mk = '\n\n---\n\n';
-				mk += 'Examples:\n';
-				for (const ex of data.examples) {
-					mk += ` - ${ex.replace('#', '\\#')}\n`;
+				contents.appendText(`${word}: ${flatten(data.type, ' | ')}`);
+				contents.appendMarkdown('\n\n---\n\n');
+				contents.appendText(data.desc);
+				if (data.examples) {
+					let mk = '\n\n---\n\n';
+					mk += 'Examples:\n';
+					for (const ex of data.examples) {
+						mk += ` - ${ex.replace('#', '\\#')}\n`;
+					}
+					contents.appendMarkdown(mk);
 				}
-				contents.appendMarkdown(mk);
-			}
-			if (data.values) {
-				let mk = '\n\n---\n\n';
-				mk += 'Values:\n\n';
-				for (const val of data.values) {
-					mk += ` - ${val.replace('#', '\\#')}\n`;
+				if (data.values) {
+					let mk = '\n\n---\n\n';
+					mk += 'Values:\n\n';
+					for (const val of data.values) {
+						mk += ` - ${val.replace('#', '\\#')}\n`;
+					}
+					mk += '\n';
+					contents.appendMarkdown(mk);
 				}
-				mk += '\n';
-				contents.appendMarkdown(mk);
+
+				let urlClassName = className;
+				if (urlClassName.startsWith('q')) {
+					urlClassName = urlClassName.slice(1);
+					urlClassName = urlClassName.replace('btn', 'button');
+					urlClassName = urlClassName.replace('img', 'image');
+				}
+				const url = `https://quasar.dev/vue-components/${urlClassName}`;
+
+				contents.appendMarkdown(`\n\n[${url}](${url})`);
+
+				const hover = new Hover(contents);
+				return hover;
 			}
 
-			let urlClassName = className;
-			if (urlClassName.startsWith('q')) {
-				urlClassName = urlClassName.slice(1);
-				urlClassName = urlClassName.replace('btn', 'button');
-				urlClassName = urlClassName.replace('img', 'image');
-			}
-			const url = `https://quasar.dev/vue-components/${urlClassName}`;
-
-			contents.appendMarkdown(`\n\n[${url}](${url})`);
-
-			const hover = new Hover(contents);
-			return hover;
+			return undefined;
+		} catch (error) {
+			log.error('Hover provider failed', error);
+			return undefined;
 		}
-
-		return undefined;
 	}
 }

@@ -26,7 +26,13 @@ export function register_command(command: string, callback: (...args: any[]) => 
 }
 
 export function get_extension_uri(...paths: string[]) {
-	return vscode.Uri.joinPath(vscode.extensions.getExtension(`${EXTENSION_AUTHOR}.${EXTENSION_PREFIX}`).extensionUri, ...(paths ?? ''));
+	const extension =
+		vscode.extensions.getExtension(`${EXTENSION_AUTHOR}.${EXTENSION_PREFIX}`) ??
+		vscode.extensions.getExtension('Aleborg.nicegui-3');
+	if (!extension) {
+		throw new Error('Unable to resolve extension URI');
+	}
+	return vscode.Uri.joinPath(extension.extensionUri, ...(paths ?? ''));
 }
 
 export async function find_file(file: string): Promise<vscode.Uri | null> {

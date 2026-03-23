@@ -1,5 +1,57 @@
 # Changelog
 
+### 0.10.0
+
+- Versioning update: bumped release version to `0.10.0` and corrected/consolidated interim version steps from this fork (`0.9.7`-`0.9.9`) into this release.
+- Fix Pylance connection race in hover/completion integration (avoid `_connection` null crash during startup)
+- Improve provider resilience:
+  - add cancellation checks and guarded fallbacks in completion/hover providers
+  - avoid provider hard-fail on transient errors
+- Reduce CPU and memory spikes in completions:
+  - cap maximum completion items returned for large lists (icons, tailwind, generic values, `ui.*`)
+  - mark truncated completion responses as `isIncomplete` so VS Code requests fresh suggestions while typing
+  - add bounded caches for repeated completion item lists and Pylance class/hover lookups
+  - reduce document context scan window in hot paths
+- Add new performance settings:
+  - `nicegui.performance.maxGeneralCompletions`
+  - `nicegui.performance.maxIconCompletions`
+  - `nicegui.performance.maxTailwindCompletions`
+  - `nicegui.performance.maxIconValueCompletions`
+  - `nicegui.performance.maxAttributeValueCompletions`
+  - `nicegui.performance.maxFunctionCompletions`
+  - `nicegui.performance.enableCompletionTimingLog`
+  - `nicegui.performance.completionTimingLogThresholdMs`
+- Improve preview and command robustness:
+  - reuse preview webview panel instead of creating many retained panels
+  - validate preview URL
+  - guard against missing active editor in switch command
+- Dev/debug quality:
+  - fix extension launch config to use the existing workspace file (`nicegui3.code-workspace`)
+- Fix extension activation crash: `Cannot read properties of undefined (reading 'extensionUri')`
+- Fix asset loading path resolution to support both build layouts:
+  - TypeScript output (`out/providers/*.js`)
+  - esbuild bundle output (`out/extension.js`)
+- Fix startup error when loading metadata files (`ENOENT ... out/assets/quasar_components.json`)
+- Restore props/classes/style suggestions by removing an over-restrictive Pylance hover gate in completions
+- Add compatibility improvements for NiceGUI 3.7.1 and newer Pylance hover response formats
+- Fix hover/completion crash caused by null hover payloads (`Cannot read properties of null (reading 'match')`)
+- Add auto-generated NiceGUI metadata pipeline (`tools/gather_nicegui_data.py`) and new assets for:
+  - `ui.*` function completions
+  - explicit NiceGUI class to Quasar component mapping
+- Improve class resolution by preferring generated NiceGUI->Quasar mapping before fallback name conversion
+- Update Quasar metadata to Quasar 2.18.5 and make metadata generation support both:
+  - legacy `../quasar/ui/src`
+  - npm `node_modules/quasar/dist/api` (or `QUASAR_API_DIR`)
+- Add `.style()` completions (CSS properties and common values)
+- Extend completion context detection to also support:
+  - `default_props(...)`
+  - `default_classes(...)`
+  - `default_style(...)` and `default_styles(...)`
+- Add NiceGUI snippets (`ngapp`, `ngpage`, `ngbutton`, `ngcard`, `ngrefresh`)
+- Add maintenance scripts:
+  - `npm run sync:nicegui-data`
+  - `npm run sync:quasar-data`
+
 ### 0.9.5
 
 - Replace icon list generator with new one provided by @evnchn (thanks!)

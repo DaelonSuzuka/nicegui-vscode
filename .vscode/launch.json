@@ -11,7 +11,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--profile=temp",
-				"${workspaceFolder}/workspace.code-workspace",
+				"${workspaceFolder}/nicegui3.code-workspace",
 				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"outFiles": [

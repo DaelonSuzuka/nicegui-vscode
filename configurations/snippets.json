@@ -1,1 +1,74 @@
-{}
+{
+	"NiceGUI Basic App": {
+		"prefix": "ngapp",
+		"body": [
+			"from nicegui import ui",
+			"",
+			"ui.label('${1:Hello NiceGUI}')",
+			"",
+			"ui.run(${2:reload=False})"
+		],
+		"description": "Create a basic NiceGUI app"
+	},
+	"NiceGUI Page": {
+		"prefix": "ngpage",
+		"body": [
+			"from nicegui import ui",
+			"",
+			"@ui.page('${1:/}')",
+			"def ${2:page_name}():",
+			"\tui.label('${3:Page content}')",
+			"",
+			"ui.run(${4:reload=False})"
+		],
+		"description": "Create a NiceGUI page with route decorator"
+	},
+	"NiceGUI Button Callback": {
+		"prefix": "ngbutton",
+		"body": [
+			"from nicegui import ui",
+			"",
+			"def ${1:on_click}():",
+			"\tui.notify('${2:Clicked}')",
+			"",
+			"ui.button('${3:Click me}', on_click=${1:on_click})",
+			"ui.run(${4:reload=False})"
+		],
+		"description": "Create a button with callback"
+	},
+	"NiceGUI Row and Card": {
+		"prefix": "ngcard",
+		"body": [
+			"from nicegui import ui",
+			"",
+			"with ui.row().classes('${1:w-full justify-center}'):",
+			"\twith ui.card().classes('${2:w-96}'):",
+			"\t\tui.label('${3:Title}').classes('text-h6')",
+			"\t\tui.label('${4:Body text}')",
+			"",
+			"ui.run(${5:reload=False})"
+		],
+		"description": "Create a row with a styled card"
+	},
+	"NiceGUI Refreshable": {
+		"prefix": "ngrefresh",
+		"body": [
+			"from nicegui import ui",
+			"",
+			"counter = {'value': 0}",
+			"",
+			"@ui.refreshable",
+			"def ${1:view}():",
+			"\tui.label(f\"Count: {counter['value']}\")",
+			"",
+			"def ${2:increment}():",
+			"\tcounter['value'] += 1",
+			"\t${1:view}.refresh()",
+			"",
+			"${1:view}()",
+			"ui.button('${3:Increment}', on_click=${2:increment})",
+			"ui.run(${4:reload=False})"
+		],
+		"description": "Create a refreshable NiceGUI view"
+	}
+}

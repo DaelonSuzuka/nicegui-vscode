@@ -1,7 +1,8 @@
-import type { Position, Range, TextDocument } from 'vscode';
+import { Position, Range, type TextDocument } from 'vscode';
 import { createLogger } from '../utils';
 
 const log = createLogger('doc_utils');
+const CONTEXT_LOOKBACK_CHARS = 4096;
 
 export function get_word_at_range(document: TextDocument, range: Range) {
 	let word = null;
@@ -26,10 +27,10 @@ export interface DocumentContext {
 	document: TextDocument;
 	position: Position;
 	result: RegExpMatchArray | null; // TODO: bad name
-	method: string;
+	method: string | undefined;
 	kind: ContextMethod;
-	surroundRange: Range;
-	surround: string;
+	surroundRange: Range | undefined;
+	surround: string | null;
 	wordRange: Range;
 	word: string;
 	className?: string;
@@ -38,15 +39,23 @@ export interface DocumentContext {
 const kinds = {
 	classes: 'classes',
 	props: 'props',
+	default_classes: 'classes',
+	default_props: 'props',
 	add_slot: 'slots',
 	on: 'events',
 	run_method: 'methods',
 	style: 'style',
+	default_style: 'style',
+	default_styles: 'style',
 };
 
 export function capture_document_context(document: TextDocument, position: Position) {
-	const prefix = document.getText().slice(0, document.offsetAt(position));
-	const result = prefix.match(/\.\s*(props|classes|style|on|run_method|add_slot)\s*\(\s*[^\)]+$/);
+	const offset = document.offsetAt(position);
+	const startOffset = Math.max(0, offset - CONTEXT_LOOKBACK_CHARS);
+	const prefix = document.getText(new Range(document.positionAt(startOffset), position));
+	const result = prefix.match(
+		/\.\s*(props|classes|style|on|run_method|add_slot|default_props|default_classes|default_style|default_styles)\s*\(\s*[^\)]+$/,
+	);
 
 	if (!result) {
 		const icon = prefix.match(/(icon)=['"]\w*$/);
@@ -60,7 +69,7 @@ export function capture_document_context(document: TextDocument, position: Posit
 	const surround = get_word_at_position(document, position, surroundPattern);
 
 	const wordPattern = /[\.\w\/-=]+|([\"'])\1/;
-	const wordRange = document.getWordRangeAtPosition(position, wordPattern);
+	const wordRange = document.getWordRangeAtPosition(position, wordPattern) ?? new Range(position, position);
 	const word = get_word_at_range(document, wordRange) ?? '';
 
 	const kind = kinds[result?.[1]] ?? 'icons';

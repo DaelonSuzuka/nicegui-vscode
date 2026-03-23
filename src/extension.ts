@@ -3,6 +3,7 @@ import { NiceGuiCompletionItemProvider, NiceGuiHoverProvider } from './providers
 import { createLogger, find_file, get_config, register_command, set_context } from './utils';
 
 const log = createLogger('ext');
+let previewPanel: vscode.WebviewPanel | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
 	new NiceGuiCompletionItemProvider(context);
@@ -35,7 +36,13 @@ export function deactivate() {
 }
 
 async function switch_script_component() {
-	const currentFile = vscode.window.activeTextEditor.document.uri.fsPath;
+	const editor = vscode.window.activeTextEditor;
+	if (!editor) {
+		vscode.window.showInformationMessage('Open a Python/Vue/JS file first.');
+		return;
+	}
+
+	const currentFile = editor.document.uri.fsPath;
 	let targetFile = '';
 	if (currentFile.endsWith('.py')) {
 		// TODO: also check for JS files somehow
@@ -46,20 +53,47 @@ async function switch_script_component() {
 		targetFile = currentFile.replace('.js', '.py');
 	}
 
+	if (!targetFile) {
+		return;
+	}
+
 	const file = await find_file(targetFile);
 	if (file) {
-		vscode.window.showTextDocument(file);
+		await vscode.window.showTextDocument(file);
+		return;
 	}
+	vscode.window.showWarningMessage(`Related file not found: ${targetFile}`);
 }
 
 async function open_nicegui_preview() {
+	if (previewPanel) {
+		previewPanel.reveal(vscode.ViewColumn.Active);
+		return;
+	}
+
+	const configuredUrl = String(get_config().get('preview.url') ?? 'http://localhost:8080');
+	let url = '';
+	try {
+		const parsedUrl = new URL(configuredUrl);
+		if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+			throw new Error('Only http and https are supported');
+		}
+		url = parsedUrl.toString();
+	} catch (error) {
+		log.error('Invalid preview URL', error);
+		vscode.window.showErrorMessage(`Invalid NiceGUI preview URL: ${configuredUrl}`);
+		return;
+	}
+
 	const options = {
 		enableScripts: true,
-		retainContextWhenHidden: true,
+		retainContextWhenHidden: false,
 	};
 	const panel = vscode.window.createWebviewPanel('nicegui', 'NiceGUI', vscode.ViewColumn.Active, options);
-
-	const url = get_config().get('preview.url');
+	previewPanel = panel;
+	panel.onDidDispose(() => {
+		previewPanel = undefined;
+	});
 
 	const html = `<!DOCTYPE html>
 <html lang="en">

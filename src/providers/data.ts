@@ -1,22 +1,44 @@
 import * as fs from 'node:fs';
-import * as vscode from 'vscode';
+import * as path from 'node:path';
 
-function get_extension_uri(...paths: string[]) {
-	return vscode.Uri.joinPath(vscode.extensions.getExtension('DaelonSuzuka.nicegui').extensionUri, ...(paths ?? ''));
+function get_asset_path(file: string) {
+	// Support both build layouts:
+	// 1) tsc output: out/providers/data.js  -> ../../assets
+	// 2) esbuild bundle: out/extension.js  -> ../assets
+	const candidates = [
+		path.resolve(__dirname, '..', '..', 'assets', file),
+		path.resolve(__dirname, '..', 'assets', file),
+	];
+	for (const candidate of candidates) {
+		if (fs.existsSync(candidate)) {
+			return candidate;
+		}
+	}
+	return candidates[0];
 }
 
-function load(file: string) {
-	const uri = get_extension_uri('assets', file);
-	return JSON.parse(fs.readFileSync(uri.fsPath).toString());
+function load<T>(file: string, fallback: T): T {
+	const assetPath = get_asset_path(file);
+	try {
+		const raw = fs.readFileSync(assetPath, 'utf-8');
+		return JSON.parse(raw) as T;
+	} catch (error) {
+		console.error(`[NiceGUI] Failed to load asset "${file}" from "${assetPath}"`, error);
+		return fallback;
+	}
 }
 
 export function flatten(item: string | string[] | JSONValue, join: string): string {
+	if (item === null || item === undefined) {
+		return '';
+	}
 	if (typeof item === 'string') {
 		return item;
 	}
 	if (Array.isArray(item)) {
-		return item.join(join);
+		return item.map(String).join(join);
 	}
+	return String(item);
 }
 
 // JSON types taken from https://github.com/microsoft/TypeScript/issues/1897#issuecomment-822032151
@@ -56,7 +78,7 @@ export interface QuasarComponentList {
 	[k: string]: QuasarComponent;
 }
 
-export const quasarData: QuasarComponentList = load('quasar_components.json');
+export const quasarData: QuasarComponentList = load<QuasarComponentList>('quasar_components.json', {});
 
 export interface QuasarGenericLists {
 	props: string[];
@@ -65,7 +87,17 @@ export interface QuasarGenericLists {
 	methods: string[];
 }
 
-export const quasarLists: QuasarGenericLists = load('quasar_lists.json');
-export const tailwindClasses: string[] = load('tailwind_classes.json');
+export const quasarLists: QuasarGenericLists = load<QuasarGenericLists>('quasar_lists.json', {
+	props: [],
+	events: [],
+	slots: [],
+	methods: [],
+});
+export const tailwindClasses: string[] = load<string[]>('tailwind_classes.json', []);
+export const niceguiFunctions: string[] = load<string[]>('nicegui_functions.json', []);
+export const niceguiToQuasarMap: { [k: string]: string } = load<{ [k: string]: string }>(
+	'nicegui_to_quasar_map.json',
+	{},
+);
 
-export const materialIcons: string[] = load('material_icons.json')
+export const materialIcons: string[] = load<string[]>('material_icons.json', []);

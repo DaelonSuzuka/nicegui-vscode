@@ -5,13 +5,36 @@ A Visual Studio Code extension with rich support for the [NiceGUI](https://niceg
 ### Features
 - syntax highlighting for embedded HTML/CSS strings
 - completions for Tailwind/CSS in `.classes()` method
+- completions for CSS properties and common values in `.style()` method
 - completions for Quasar props, events, methods, and slots
+- completions for `ui.*` functions from installed NiceGUI
 - hovers for Quasar attributes
 - completions for icons
+- NiceGUI snippets (`ngapp`, `ngpage`, `ngbutton`, `ngcard`, `ngrefresh`)
 
-### Todo
-- completions for style attributes
-- NiceGUI snippets
+### Updating metadata for a new NiceGUI version
+
+Run:
+
+```bash
+npm run sync:nicegui-data
+```
+
+This refreshes `assets/nicegui_functions.json` and `assets/nicegui_to_quasar_map.json` from your installed `nicegui` package.
+
+### Updating Quasar metadata
+
+If Quasar API files are available in either:
+- `../quasar/ui/src` (legacy repo checkout), or
+- `node_modules/quasar/dist/api` (npm package),
+
+run:
+
+```bash
+npm run sync:quasar-data
+```
+
+You can also override the source path with `QUASAR_API_DIR=/path/to/api`.
 
 ## Screenshots
 
